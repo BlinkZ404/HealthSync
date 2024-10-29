@@ -1,13 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="46eeacc6-e5ed-4e40-a2c8-81c4cf04a820" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/appointment.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/base.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/cart.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/checkout.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/donation.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/error.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/home.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/medicine.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/registration.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/uprofile.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/HealthSync.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/HealthSync.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/HealthSync/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/HealthSync/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/HealthSync/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/HealthSync/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
   "customColor": "",
@@ -19,6 +51,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master"
+  }
+}]]></component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="HealthSync" />
