@@ -5,10 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46eeacc6-e5ed-4e40-a2c8-81c4cf04a820" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/register.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HealthSync/HealthSync/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/HealthSync/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HealthSync/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/registration.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,23 +31,32 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2o7esCtcLTtmdLzVoueSBYYgAWC" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Akash/PycharmProjects/HealthSync/HealthSync/core/static/img&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Akash\PycharmProjects\HealthSync\HealthSync\core\static\img" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Akash\PycharmProjects\HealthSync\HealthSync\core\static\img" />
+    </key>
+  </component>
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="pip install -r requirements.txt" />
