@@ -5,15 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46eeacc6-e5ed-4e40-a2c8-81c4cf04a820" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/doctors.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/faq.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/privacy.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/refund_policy.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/terms.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HealthSync/core/templates/user_profile.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HealthSync/HealthSync/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/HealthSync/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/appointment.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/donation.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/donation.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/error.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/registration.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/medicine.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/medicine.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/uprofile.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/HealthSync/core/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HealthSync/core/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/db.sqlite3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +110,74 @@
       <option name="presentableId" value="Default" />
       <updated>1730225245596</updated>
     </task>
+    <task id="LOCAL-00001" summary="404 Error html Added">
+      <option name="closed" value="true" />
+      <created>1730376690679</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1730376690679</updated>
+    </task>
+    <task id="LOCAL-00002" summary="about us html Added">
+      <option name="closed" value="true" />
+      <created>1730376788533</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1730376788533</updated>
+    </task>
+    <task id="LOCAL-00003" summary="b2b registration html Added">
+      <option name="closed" value="true" />
+      <created>1730376799527</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1730376799527</updated>
+    </task>
+    <task id="LOCAL-00004" summary="base html updated">
+      <option name="closed" value="true" />
+      <created>1730376818873</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1730376818873</updated>
+    </task>
+    <task id="LOCAL-00005" summary="cart html added">
+      <option name="closed" value="true" />
+      <created>1730376829167</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1730376829167</updated>
+    </task>
+    <task id="LOCAL-00006" summary="checkout.html added">
+      <option name="closed" value="true" />
+      <created>1730376844039</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1730376844039</updated>
+    </task>
+    <task id="LOCAL-00007" summary="disease_prediction.html added">
+      <option name="closed" value="true" />
+      <created>1730376883480</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1730376883480</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="404 Error html Added" />
+    <MESSAGE value="about us html Added" />
+    <MESSAGE value="b2b registration html Added" />
+    <MESSAGE value="base html updated" />
+    <MESSAGE value="cart html added" />
+    <MESSAGE value="checkout.html added" />
+    <MESSAGE value="disease_prediction.html added" />
+    <option name="LAST_COMMIT_MESSAGE" value="disease_prediction.html added" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
