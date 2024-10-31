@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center align-items-stretch">
+        <!-- Left Side Information Section -->
+        <div class="col-md-5 d-flex flex-column justify-content-center align-items-center bg-light p-4" style="border-radius: 8px;">
+            <h2 class="text-primary mb-3 text-center" style="font-family: 'Arial', sans-serif;">Welcome to HealthSync Wholesale</h2>
+            <p class="text-center mb-3" style="font-size: 1.1rem;">Join us to access quality medicines at wholesale prices and grow your business with ease.</p>
+            <img src="{% static 'img/pharmacy.jpg' %}" alt="Pharmacy Illustration" class="img-fluid mb-4" style="max-width: 400px; border-radius: 8px;">
+
+            <!-- Benefits Section -->
+            <div class="bg-primary text-white rounded p-3 w-100 text-center">
+                <h5 class="fw-bold mb-2">Benefits of Partnering with HealthSync</h5>
+                <div class="d-flex flex-wrap justify-content-center">
+                    <div class="col-6 d-flex align-items-center justify-content-center">
+                        <p class="mb-1"><i class="bx bx-package"></i> Free Delivery</p>
+                    </div>
+                    <div class="col-6 d-flex align-items-center justify-content-center">
+                        <p class="mb-1"><i class="bx bx-map"></i> Nationwide Coverage</p>
+                    </div>
+                    <div class="col-6 d-flex align-items-center justify-content-center">
+                        <p class="mb-1"><i class="bx bx-purchase-tag"></i> Exclusive Discounts</p>
+                    </div>
+                    <div class="col-6 d-flex align-items-center justify-content-center">
+                        <p class="mb-1"><i class="bx bx-check-shield"></i> 100% Genuine Products</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side Registration Form -->
+        <div class="col-md-5 bg-white p-4" style="border-radius: 8px;">
+            <h3 class="mb-4 text-dark text-center">Pharmacy Registration</h3>
+            <form>
+                <div class="mb-3">
+                    <label for="fullName" class="form-label">Full Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="mobileNumber" class="form-label">Mobile Number <span class="text-danger">*</span></label>
+                    <input type="tel" class="form-control" id="mobileNumber" placeholder="+8801234567890" required>
+                </div>
+                <div class="mb-3">
+                    <label for="pharmacyName" class="form-label">Pharmacy Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="pharmacyName" placeholder="Enter your pharmacy name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="licenseNumber" class="form-label">Drug License Number <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="licenseNumber" placeholder="Enter your drug license number" required>
+                </div>
+                <div class="mb-3">
+                    <label for="licenseUpload" class="form-label">Upload Drug License <span class="text-danger">*</span> (PDF or JPEG)</label>
+                    <input type="file" class="form-control" id="licenseUpload" accept=".pdf, .jpg, .jpeg" required>
+                    <small class="text-muted">Max size 2 MB</small>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
