@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar Filter Section -->
+        <div class="col-md-3">
+            <!-- Sort & Filter Card -->
+            <div class="card shadow-sm mb-3" style="border-radius: 8px;">
+                <div class="card-header bg-primary text-white text-center py-2" style="border-radius: 8px 8px 0 0;">
+                    <h6 class="mb-0">Sort & Filter</h6>
+                </div>
+                <div class="card-body">
+                    <!-- Gender Filter -->
+                    <div class="mb-3">
+                        <h6>Gender</h6>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="male">
+                            <label class="form-check-label" for="male">Male</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="female">
+                            <label class="form-check-label" for="female">Female</label>
+                        </div>
+                    </div>
+
+                    <!-- Specialities Filter -->
+                    <div class="mb-3">
+                        <h6>Specialities</h6>
+                        <select class="form-select">
+                            <option selected disabled>Choose Speciality</option>
+                            <option>Cardiologist</option>
+                            <option>Orthopedic</option>
+                            <option>Neurologist</option>
+                            <option>Dermatologist</option>
+                        </select>
+                    </div>
+
+                    <!-- Location Filter (Divisions) -->
+                    <div class="mb-3">
+                        <h6>Location</h6>
+                        <select class="form-select">
+                            <option selected disabled>Select Division</option>
+                            <option>Barishal</option>
+                            <option>Chattogram</option>
+                            <option>Dhaka</option>
+                            <option>Khulna</option>
+                            <option>Mymensingh</option>
+                            <option>Rajshahi</option>
+                            <option>Rangpur</option>
+                            <option>Sylhet</option>
+                        </select>
+                    </div>
+
+                    <!-- Availability Filter -->
+                    <div class="mb-3">
+                        <h6>Availability</h6>
+                        <input type="date" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctor Profiles Section -->
+        <div class="col-md-9">
+            <div class="row">
+                <!-- Doctor Card 1 -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 shadow-sm" style="border-radius: 8px;">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="{% static 'img/dr-1.jpg' %}" alt="Doctor Image" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                                <h5 class="card-title mb-0">Dr. S M Shahabul Karim</h5>
+                            </div>
+                            <p class="text-muted mb-1">Orthopedic Surgeon</p>
+                            <p class="text-muted">23 Years of Experience</p>
+                            <p><i class="bx bx-building"></i> Ibn Sina Hospital, Jessore</p>
+                            <p>House No # 68, Jail Road, Daratana, Jessore-7400, Bangladesh</p>
+                            <div class="mb-2">
+                                <span class="badge bg-secondary">Arthritis</span>
+                                <span class="badge bg-secondary">Joint Resurfacing</span>
+                                <span class="badge bg-secondary">Osteoporosis</span>
+                            </div>
+                            <div class="d-flex">
+                                <input type="date" class="form-control me-2" placeholder="Select Date">
+                                <button class="btn btn-primary">Book Appointment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Doctor Card 2 -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 shadow-sm" style="border-radius: 8px;">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="{% static 'img/dr-2.jpg' %}" alt="Doctor Image" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                                <h5 class="card-title mb-0">Dr. Ahmed Ali</h5>
+                            </div>
+                            <p class="text-muted mb-1">Cardiologist</p>
+                            <p class="text-muted">15 Years of Experience</p>
+                            <p><i class="bx bx-building"></i> Apollo Hospital, Dhaka</p>
+                            <p>House No # 12, Mirpur Road, Dhaka, Bangladesh</p>
+                            <div class="mb-2">
+                                <span class="badge bg-secondary">Angioplasty</span>
+                                <span class="badge bg-secondary">Heart Surgery</span>
+                                <span class="badge bg-secondary">Pacemaker</span>
+                            </div>
+                            <div class="d-flex">
+                                <input type="date" class="form-control me-2" placeholder="Select Date">
+                                <button class="btn btn-primary">Book Appointment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
