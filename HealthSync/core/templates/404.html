@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container text-center" style="padding: 100px 20px;">
+    <h1 class="display-1 fw-bold text-primary">404</h1>
+    <h3 class="text-muted">Oops! Page Not Found</h3>
+    <p class="lead text-secondary mb-4">
+        The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
+    </p>
+    <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+        <i class="bx bx-home"></i> Back to Home
+    </a>
+</div>
+{% endblock %}
