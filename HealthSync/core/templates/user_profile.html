@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="card bg-light text-dark shadow-sm mb-3">
+                <div class="card-body text-center">
+                    <div class="position-relative d-inline-block">
+                        <img src="https://via.placeholder.com/100" alt="Profile Picture" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; border: 3px solid #4fa3db;">
+                        <label for="profilePicture" class="position-absolute bottom-0 start-50 translate-middle-x bg-primary rounded-circle p-2" style="cursor: pointer;">
+                            <i class="bx bx-camera text-white"></i>
+                        </label>
+                    </div>
+                    <input type="file" class="d-none" id="profilePicture" accept="image/*" onchange="previewProfilePicture(event)">
+
+                    <h5 class="card-title mt-3">User</h5>
+                </div>
+            </div>
+
+            <!-- Profile Options Section -->
+            <ul class="list-group mb-3">
+                <li class="list-group-item"><i class="bx bx-user"></i> <a href="javascript:void(0)" class="text-dark" onclick="showSection('viewProfile')">Personal Information</a></li>
+                <li class="list-group-item"><i class="bx bx-map"></i> <a href="javascript:void(0)" class="text-dark" onclick="showSection('manageAddress')">Manage Address</a></li>
+                <li class="list-group-item"><i class="bx bx-calendar"></i> <a href="javascript:void(0)" class="text-dark" onclick="showSection('appointments')">Appointments</a></li>
+                <li class="list-group-item"><i class="bx bx-package"></i> <a href="javascript:void(0)" class="text-dark" onclick="showSection('orders')">Orders</a></li>
+                <li class="list-group-item"><i class="bx bx-droplet"></i> <a href="javascript:void(0)" class="text-dark" onclick="showSection('donationHistory')">Donation History</a></li>
+            </ul>
+
+            <!-- Legal & Support Section -->
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <i class="bx bx-file"></i>
+                    <a href="{% url 'terms_conditions' %}" class="text-dark">Terms & Conditions</a>
+                </li>
+                <li class="list-group-item">
+                    <i class="bx bx-shield"></i>
+                    <a href="{% url 'privacy_policy' %}" class="text-dark">Privacy Policy</a>
+                </li>
+                <li class="list-group-item">
+                    <i class="bx bx-refresh"></i>
+                    <a href="{% url 'refund_policy' %}" class="text-dark">Return and Refund Policy</a>
+                </li>
+                <li class="list-group-item">
+                    <i class="bx bx-help-circle"></i>
+                    <a href="{% url 'faq' %}" class="text-dark">FAQ</a>
+                </li>
+                <li class="list-group-item">
+                    <i class="bx bx-log-out"></i>
+                    <a href="{% url 'logout' %}" class="text-dark">Logout</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Content Area -->
+        <div class="col-md-9">
+            <!-- View Profile Section (Default Visible) -->
+            <div id="viewProfile" class="profile-section">
+                <h5>Personal Information</h5>
+                <form>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="emailAddress" class="form-label">Email Address <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="emailAddress" placeholder="Enter email address" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" placeholder="Enter full name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="mobileNumber" class="form-label">Mobile No</label>
+                        <input type="text" class="form-control" id="mobileNumber" placeholder="+8801234567890">
+                    </div>
+                    <div class="mb-3">
+                        <label for="gender" class="form-label">Gender</label>
+                        <select class="form-select" id="gender">
+                            <option selected disabled>Choose</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dob" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="dob">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Update Profile</button>
+                </form>
+            </div>
+
+            <!-- Manage Address Section -->
+            <div id="manageAddress" class="profile-section d-none">
+                <h5>Manage Address</h5>
+                <button class="btn btn-primary mb-3" onclick="toggleAddAddressForm()">+ Add New Address</button>
+
+                <!-- Add Address Form (Initially Hidden) -->
+                <div id="addAddressForm" class="d-none">
+                    <form>
+                        <div class="mb-3">
+                            <label for="addressName" class="form-label">Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="addressName" placeholder="Enter name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="addressNumber" class="form-label">Number <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="addressNumber" placeholder="Enter contact number" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="addressRoad" class="form-label">Full Address <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="addressRoad" placeholder="Enter road, division, district" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Save Address</button>
+                    </form>
+                </div>
+
+                <!-- No Address Message -->
+                <div class="text-center">
+                    <img src="https://via.placeholder.com/150" alt="No Address Icon">
+                    <p>-- No Address Found --</p>
+                </div>
+            </div>
+
+            <!-- Appointments Section -->
+            <div id="appointments" class="profile-section d-none">
+                <h5>Appointments</h5>
+                <div class="text-center">
+                    <img src="https://via.placeholder.com/150" alt="No Appointments Icon">
+                    <p>-- No Appointments Scheduled --</p>
+                </div>
+            </div>
+
+            <!-- Orders Section -->
+            <div id="orders" class="profile-section d-none">
+                <h5>My Orders</h5>
+                <div class="d-flex mb-3">
+                    <button class="btn btn-outline-primary me-2">All</button>
+                    <button class="btn btn-outline-secondary me-2">Confirmed</button>
+                    <button class="btn btn-outline-secondary me-2">Delivered</button>
+                    <button class="btn btn-outline-secondary">Cancelled</button>
+                </div>
+                <div class="text-center">
+                    <img src="https://via.placeholder.com/150" alt="No Orders Icon">
+                    <p>-- You have not placed any order yet. --</p>
+                </div>
+            </div>
+
+            <!-- Donation History Section -->
+            <div id="donationHistory" class="profile-section d-none">
+                <h5>Donation History</h5>
+                <button class="btn btn-primary mb-3" onclick="showAddDonationForm()">+ Add Donation History</button>
+
+                <!-- Donation History Form (Initially Hidden) -->
+                <div id="addDonationForm" class="d-none">
+                    <form>
+                        <div class="mb-3">
+                            <label for="donationDate" class="form-label">Donation Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="donationDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="hospitalName" class="form-label">Hospital Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="hospitalName" placeholder="Enter hospital name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="receiverName" class="form-label">Receiver Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="receiverName" placeholder="Enter receiver name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="receiverNumber" class="form-label">Receiver Number <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="receiverNumber" placeholder="Enter receiver number" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Save Donation</button>
+                    </form>
+                </div>
+
+                <div class="text-center">
+                    <img src="https://via.placeholder.com/150" alt="No Donation History Icon">
+                    <p>-- No Donation History Found --</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to preview profile picture, manage sections, and toggle forms -->
+<script>
+    function previewProfilePicture(event) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            const output = document.getElementById('previewImage');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function showSection(sectionId) {
+        document.querySelectorAll('.profile-section').forEach(section => {
+            section.classList.add('d-none');
+        });
+        document.getElementById(sectionId).classList.remove('d-none');
+    }
+
+    function showAddDonationForm() {
+        const form = document.getElementById('addDonationForm');
+        form.classList.toggle('d-none'); // Toggle visibility
+    }
+
+    function toggleAddAddressForm() {
+        const form = document.getElementById('addAddressForm');
+        form.classList.toggle('d-none'); // Toggle visibility
+    }
+</script>
+{% endblock %}
