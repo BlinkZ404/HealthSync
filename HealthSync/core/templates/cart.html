@@ -1,10 +1,134 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container py-5">
+    <h3 class="text-center mb-4">Your Shopping Cart</h3>
 
-</body>
-</html>
+    <div class="row">
+        <!-- Left Column for Cart Items -->
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="table-primary text-center">
+                            <tr>
+                                <th>Image</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Example Cart Item -->
+                            <tr>
+                                <td class="text-center">
+                                    <img src="{% static 'img/medicine-1.jpg' %}" alt="Product Image" class="img-fluid rounded">
+                                </td>
+                                <td>Paracetamol 500mg</td>
+                                <td class="text-center">
+                                    <input type="number" class="form-control form-control-sm text-center" value="2" min="1" style="width: 60px;">
+                                </td>
+                                <td class="text-end">৳ 100</td>
+                                <td class="text-end">৳ 200</td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-outline-danger"><i class="bx bx-trash"></i> Remove</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-body d-flex justify-content-end">
+                    <div>
+                        <p class="mb-2"><strong>Subtotal:</strong> <span class="text-muted">৳ 200</span></p>
+                        <h5><strong>Total:</strong> <span class="text-primary">৳ 200</span></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column for Codes and Actions -->
+        <div class="col-md-4">
+            <!-- Discount Code Section -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="text-center mb-3">Apply Discount Code</h5>
+                    <input type="text" class="form-control mb-2" placeholder="Promo / Coupon Code">
+                    <button class="btn btn-primary w-100 mb-3">Apply Coupon</button>
+                    <input type="text" class="form-control mb-2" placeholder="Gift Voucher Code">
+                    <button class="btn btn-primary w-100">Apply Voucher</button>
+                </div>
+            </div>
+
+            <!-- Action Buttons Section -->
+            <div class="d-flex flex-column align-items-center">
+                <a href="{% url 'medicine' %}" class="btn btn-outline-secondary btn-lg w-100 mb-2"><i class="bx bx-left-arrow-alt"></i> Continue Shopping</a>
+                <a href="{% url 'checkout' %}" class="btn btn-success btn-lg w-100"><i class="bx bx-check-circle"></i> Checkout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Embedded CSS for styling -->
+<style>
+    /* Table Enhancements */
+    .table-responsive {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .table thead th {
+        background-color: #007bff;
+        color: #fff;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+        padding: 0.75rem;
+    }
+
+    /* Buttons */
+    .btn-outline-secondary {
+        border: 1px solid #6c757d;
+        color: #6c757d;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-primary, .btn-success {
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover, .btn-success:hover {
+        background-color: #0056b3;
+    }
+
+    /* Code and Action Section */
+    .card-body input[type="text"] {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+    }
+
+    .card-body button {
+        border-radius: 8px;
+    }
+
+    /* Additional Styling for Right-Aligned Content */
+    .w-100 {
+        width: 100%;
+    }
+
+    .img-fluid {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}
