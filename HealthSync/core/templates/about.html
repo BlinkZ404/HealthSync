@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section py-5" style="background-color: #1c3b70; color: white; text-align: center;">
+    <div class="container">
+        <h1 class="display-4">About HealthSync</h1>
+        <p class="lead">Connecting healthcare needs with ease. Empowering you to book doctor appointments, buy medicines, and contribute to life-saving blood donations.</p>
+    </div>
+</section>
+
+<!-- Our Mission Section -->
+<section class="mission-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Our Mission</h2>
+        <p class="text-center mb-5">At HealthSync, our mission is to make healthcare accessible and convenient for everyone. We aim to bridge the gap between patients and healthcare services by providing a unified platform for medical appointments, medicine purchases, and blood donation drives. With HealthSync, your health needs are just a click away.</p>
+        
+        <div class="row text-center">
+            <div class="col-md-4">
+                <i class="bx bx-calendar-check" style="font-size: 3rem; color: #1c3b70;"></i>
+                <h4 class="mt-3">Easy Appointments</h4>
+                <p>Book appointments with trusted doctors at your convenience and stay on top of your health.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="bx bx-capsule" style="font-size: 3rem; color: #1c3b70;"></i>
+                <h4 class="mt-3">Quality Medicines</h4>
+                <p>Order your prescribed medicines and get them delivered directly to your doorstep with ease.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="bx bx-droplet" style="font-size: 3rem; color: #1c3b70;"></i>
+                <h4 class="mt-3">Blood Donation</h4>
+                <p>Become a hero by donating blood and helping those in need during critical times.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Story Section -->
+<section class="story-section py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">Our Story</h2>
+        <p class="text-center mb-5">HealthSync was founded with a vision to simplify healthcare services for everyone. What started as a small idea to help people access medical services more conveniently has grown into a platform that serves hundreds of users daily. Our dedicated team works tirelessly to bring you an experience that combines convenience, quality, and care.</p>
+    </div>
+</section>
+
+<!-- Our Values Section -->
+<section class="values-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Our Values</h2>
+        <div class="row text-center">
+            <div class="col-md-4">
+                <i class="bx bx-heart" style="font-size: 3rem; color: #1c3b70;"></i>
+                <h4 class="mt-3">Compassion</h4>
+                <p>We care deeply about the well-being of our users and work to make healthcare more accessible for all.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="bx bx-shield" style="font-size: 3rem; color: #1c3b70;"></i>
+                <h4 class="mt-3">Trust</h4>
+                <p>Our commitment to trust and transparency is at the heart of everything we do.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="bx bx-rocket" style="font-size: 3rem; color: #1c3b70;"></i>
+                <h4 class="mt-3">Innovation</h4>
+                <p>We embrace technology and innovation to make healthcare services simpler and more efficient.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Meet the Team Section -->
+<section class="team-section py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">Meet Our Team</h2>
+        <p class="text-center mb-5">Our team of healthcare professionals, tech experts, and customer service champions are here to serve you.</p>
+        
+        <div class="row text-center">
+            <div class="col-md-4">
+                <img src="{% static 'img/about-p1.jpg' %}" alt="Team Member" class="rounded-circle mb-3" style="width: 120px; height: 120px;">
+                <h5>Arifur Rahman</h5>
+                <p>Founder & CEO</p>
+            </div>
+            <div class="col-md-4">
+                <img src="{% static 'img/about-p2.jpg' %}" alt="Team Member" class="rounded-circle mb-3" style="width: 120px; height: 120px;">
+                <h5>Saif Ahmed</h5>
+                <p>Chief Medical Officer</p>
+            </div>
+            <div class="col-md-4">
+                <img src="{% static 'img/about-p3.jpg' %}" alt="Team Member" class="rounded-circle mb-3" style="width: 120px; height: 120px;">
+                <h5>MD Al Amin</h5>
+                <p>Head of Technology</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Us Section -->
+<section class="contact-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Contact Us</h2>
+        <p class="text-center mb-5">Have questions or need assistance? Reach out to us, and we’ll be happy to help!</p>
+        <div class="text-center">
+            <p><i class="bx bx-phone"></i> <strong>Phone:</strong> 09611-777777</p>
+            <p><i class="bx bx-envelope"></i> <strong>Email:</strong> help@healthsync.com</p>
+            <p><i class="bx bx-map"></i> <strong>Address:</strong> 46/2 Green Road, Dhaka, Bangladesh</p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
