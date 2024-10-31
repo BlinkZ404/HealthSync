@@ -4,7 +4,6 @@
 {% block content %}
 <div class="container row mx-auto" style="max-width: 900px; margin-top: 50px; background: transparent;">
     <!-- Left Section -->
-    <!-- Left Section -->
     <div class="item col-md-6 text-white d-flex flex-column justify-content-center align-items-center text-center" style="background: #1c3b70; padding: 30px; border-radius: 15px 0 0 15px;">
         <img src="{% static 'img/Healthsync-W.png' %}" alt="BlinkZ Logo" style="width: 250px; margin-bottom: 10px;">
         <h4>Your Health, Connected and Simplified</h4>
@@ -28,8 +27,13 @@
                 <input type="password" class="form-control" placeholder="Enter password" style="background: #fff; color: #000; border: none; border-bottom: 2px solid #c4c9d4;">
             </div>
             <div class="mb-3">
-                <input type="checkbox"> <span style="color: #c4c9d4;">I agree with the terms</span>
+                <input type="checkbox" required>
+                <span style="color: #c4c9d4;">I agree with the
+                    <a href="{% url 'terms_conditions' %}" style="color: #4fa3db;" target="_blank">Terms & Conditions</a> and
+                    <a href="{% url 'privacy_policy' %}" style="color: #4fa3db;" target="_blank">Privacy Policy</a>
+                </span>
             </div>
+
             <button class="btn btn-custom w-100" style="background-color: #4fa3db; font-weight: bold; padding: 10px 0; color: white;">Sign Up</button>
             <div class="text-center mt-4">
                 <p class="mb-0" style="color: #c4c9d4;">Already Have An Account? <a href="{% url 'login' %}" style="color: #4fa3db; cursor: pointer;">Sign In</a></p>
