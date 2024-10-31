@@ -67,19 +67,19 @@
 
     <nav class="navbar navbar-expand-lg" style="background-color: #1c3b70;">
         <div class="container">
-            <a class="navbar-brand text-white" href="">
-                <img src="{% static 'img/Healthsync-W.png' %}" alt="Medicate Logo" style="width: 150px;">
+            <a class="navbar-brand text-white" href="{% url 'home' %}">
+                <img src="{% static 'img/Healthsync-W.png' %}" alt="HealthSync Logo" style="width: 150px;">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Doctors</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Medicine</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Blood Donation</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Disease Prediction</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="{% url 'doctors' %}">Doctors</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="{% url 'medicine' %}">Medicine</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="{% url 'blood_donation' %}">Blood Donation</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="{% url 'disease_prediction' %}">Disease Prediction</a></li>
                 </ul>
                 <!-- Search Bar with Icon -->
                 <form class="d-flex me-3">
@@ -93,10 +93,13 @@
                 <!-- Cart Icon and Appointments Button -->
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link position-relative text-white" href="#"><i class="bx bx-cart"></i><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">0</span></a>
+                        <a class="nav-link position-relative text-white" href="{% url 'cart' %}">
+                            <i class="bx bx-cart"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">0</span>
+                        </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="#" class="btn btn-primary" style="background-color: #4fa3db; color: white;">Login +</a>
+                    <li class="nav-item ms-4">
+                        <a href="{% url 'login' %}" class="btn btn-primary" style="background-color: #4fa3db; color: white;">Login +</a>
                     </li>
                 </ul>
             </div>
@@ -116,31 +119,31 @@
     <div class="container py-5">
         <div class="row">
             <div class="col-md-3">
-                <img src="{% static 'img/Healthsync-W.png' %}" alt="Medicate Logo" style="width: 250px;">
+                <img src="{% static 'img/Healthsync-W.png' %}" alt="HealthSync Logo" style="width: 250px;">
                 <p class="mt-3">Your Health, Connected and Simplified</p>
             </div>
             <div class="col-md-3">
                 <h5 class="text-uppercase">Useful Links</h5>
                 <ul class="list-unstyled">
-                    <li><a href="#" class="text-white">About Us</a></li>
-                    <li><a href="#" class="text-white">FAQ</a></li>
-                    <li><a href="#" class="text-white">Privacy Policy</a></li>
-                    <li><a href="#" class="text-white">Terms & Conditions</a></li>
-                    <li><a href="#" class="text-white">Return & Refund Policy</a></li>
+                    <li><a href="{% url 'about' %}" class="text-white">About Us</a></li>
+                    <li><a href="{% url 'terms_conditions' %}" class="text-white">Terms & Conditions</a></li>
+                    <li><a href="{% url 'privacy_policy' %}" class="text-white">Privacy Policy</a></li>
+                    <li><a href="{% url 'refund_policy' %}" class="text-white">Return & Refund Policy</a></li>
+                    <li><a href="{% url 'faq' %}" class="text-white">FAQ</a></li>
                 </ul>
             </div>
             <div class="col-md-3">
                 <h5 class="text-uppercase">B2B Links</h5>
                 <ul class="list-unstyled">
-                    <li><a href="#" class="text-white">Registration</a></li>
-                    <li><a href="#" class="text-white">09611-777779</a></li>
-                    <li><a href="#" class="text-white">admin@healthsync.com</a></li>
+                    <li><a href="{% url 'b2b_registration' %}" class="text-white">Registration</a></li>
+                    <li><a href="tel:09611-777779" class="text-white">09611-777779</a></li>
+                    <li><a href="mailto:admin@healthsync.com" class="text-white">admin@healthsync.com</a></li>
                 </ul>
             </div>
             <div class="col-md-3">
                 <h5 class="text-uppercase">Contact Us</h5>
-                <p><i class="bx bx-phone"></i> 09611-777777</p>
-                <p><i class="bx bx-envelope"></i> help@healthsync.com</p>
+                <p><i class="bx bx-phone"></i> <a href="tel:09611-777777" class="text-white">09611-777777</a></p>
+                <p><i class="bx bx-envelope"></i> <a href="mailto:help@healthsync.com" class="text-white">help@healthsync.com</a></p>
                 <p><i class="bx bx-map"></i> 46/2 Green Road, Dhaka, Bangladesh</p>
             </div>
         </div>
