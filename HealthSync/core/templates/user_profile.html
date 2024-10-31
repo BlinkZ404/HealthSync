@@ -8,14 +8,16 @@
             <div class="card bg-light text-dark shadow-sm mb-3">
                 <div class="card-body text-center">
                     <div class="position-relative d-inline-block">
-                        <img src="https://via.placeholder.com/100" alt="Profile Picture" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; border: 3px solid #4fa3db;">
+                        <img src="{% if profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}https://via.placeholder.com/100{% endif %}"
+                             alt="Profile Picture" id="previewImage" class="rounded-circle mb-3"
+                             style="width: 120px; height: 120px; border: 3px solid #4fa3db;">
                         <label for="profilePicture" class="position-absolute bottom-0 start-50 translate-middle-x bg-primary rounded-circle p-2" style="cursor: pointer;">
                             <i class="bx bx-camera text-white"></i>
                         </label>
                     </div>
-                    <input type="file" class="d-none" id="profilePicture" accept="image/*" onchange="previewProfilePicture(event)">
+                    <input type="file" class="d-none" id="profilePicture" name="profile_picture" accept="image/*" onchange="previewProfilePicture(event)">
 
-                    <h5 class="card-title mt-3">User</h5>
+                    <h5 class="card-title mt-3">{{ request.user.username }}</h5>
                 </div>
             </div>
 
@@ -58,34 +60,39 @@
             <!-- View Profile Section (Default Visible) -->
             <div id="viewProfile" class="profile-section">
                 <h5>Personal Information</h5>
-                <form>
+                <form method="POST" action="{% url 'update_profile' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
                     <div class="mb-3">
                         <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+                        <input type="text" class="form-control" id="username" name="username" value="{{ request.user.username }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="emailAddress" class="form-label">Email Address <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control" id="emailAddress" placeholder="Enter email address" required>
+                        <input type="email" class="form-control" id="emailAddress" name="email" value="{{ request.user.email }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="fullName" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="fullName" placeholder="Enter full name">
+                        <input type="text" class="form-control" id="fullName" name="full_name" value="{{ request.user.first_name }} {{ request.user.last_name }}" placeholder="Enter full name">
                     </div>
                     <div class="mb-3">
                         <label for="mobileNumber" class="form-label">Mobile No</label>
-                        <input type="text" class="form-control" id="mobileNumber" placeholder="+8801234567890">
+                        <input type="text" class="form-control" id="mobileNumber" name="mobile_number" value="{{ profile.mobile_number }}" placeholder="+8801234567890">
                     </div>
                     <div class="mb-3">
                         <label for="gender" class="form-label">Gender</label>
-                        <select class="form-select" id="gender">
+                        <select class="form-select" id="gender" name="gender">
                             <option selected disabled>Choose</option>
-                            <option>Male</option>
-                            <option>Female</option>
+                            <option value="Male" {% if profile.gender == "Male" %}selected{% endif %}>Male</option>
+                            <option value="Female" {% if profile.gender == "Female" %}selected{% endif %}>Female</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="dob" class="form-label">Date of Birth</label>
-                        <input type="date" class="form-control" id="dob">
+                        <input type="date" class="form-control" id="dob" name="dob" value="{{ profile.dob|date:'Y-m-d' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="profilePicture" class="form-label">Profile Picture</label>
+                        <input type="file" class="form-control" id="profilePictureInput" name="profile_picture" accept="image/*" onchange="previewProfilePicture(event)">
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Update Profile</button>
                 </form>
@@ -95,27 +102,24 @@
             <div id="manageAddress" class="profile-section d-none">
                 <h5>Manage Address</h5>
                 <button class="btn btn-primary mb-3" onclick="toggleAddAddressForm()">+ Add New Address</button>
-
-                <!-- Add Address Form (Initially Hidden) -->
                 <div id="addAddressForm" class="d-none">
-                    <form>
+                    <form method="POST" action="{% url 'add_address' %}">
+                        {% csrf_token %}
                         <div class="mb-3">
                             <label for="addressName" class="form-label">Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="addressName" placeholder="Enter name" required>
+                            <input type="text" class="form-control" id="addressName" name="address_name" placeholder="Enter name" required>
                         </div>
                         <div class="mb-3">
                             <label for="addressNumber" class="form-label">Number <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="addressNumber" placeholder="Enter contact number" required>
+                            <input type="text" class="form-control" id="addressNumber" name="address_number" placeholder="Enter contact number" required>
                         </div>
                         <div class="mb-3">
                             <label for="addressRoad" class="form-label">Full Address <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="addressRoad" placeholder="Enter road, division, district" required>
+                            <input type="text" class="form-control" id="addressRoad" name="address_road" placeholder="Enter road, division, district" required>
                         </div>
                         <button type="submit" class="btn btn-success w-100">Save Address</button>
                     </form>
                 </div>
-
-                <!-- No Address Message -->
                 <div class="text-center">
                     <img src="https://via.placeholder.com/150" alt="No Address Icon">
                     <p>-- No Address Found --</p>
@@ -150,30 +154,28 @@
             <div id="donationHistory" class="profile-section d-none">
                 <h5>Donation History</h5>
                 <button class="btn btn-primary mb-3" onclick="showAddDonationForm()">+ Add Donation History</button>
-
-                <!-- Donation History Form (Initially Hidden) -->
                 <div id="addDonationForm" class="d-none">
-                    <form>
+                    <form method="POST" action="{% url 'add_donation' %}">
+                        {% csrf_token %}
                         <div class="mb-3">
                             <label for="donationDate" class="form-label">Donation Date <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" id="donationDate" required>
+                            <input type="date" class="form-control" id="donationDate" name="donation_date" required>
                         </div>
                         <div class="mb-3">
                             <label for="hospitalName" class="form-label">Hospital Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="hospitalName" placeholder="Enter hospital name" required>
+                            <input type="text" class="form-control" id="hospitalName" name="hospital_name" placeholder="Enter hospital name" required>
                         </div>
                         <div class="mb-3">
                             <label for="receiverName" class="form-label">Receiver Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="receiverName" placeholder="Enter receiver name" required>
+                            <input type="text" class="form-control" id="receiverName" name="receiver_name" placeholder="Enter receiver name" required>
                         </div>
                         <div class="mb-3">
                             <label for="receiverNumber" class="form-label">Receiver Number <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="receiverNumber" placeholder="Enter receiver number" required>
+                            <input type="text" class="form-control" id="receiverNumber" name="receiver_number" placeholder="Enter receiver number" required>
                         </div>
                         <button type="submit" class="btn btn-success w-100">Save Donation</button>
                     </form>
                 </div>
-
                 <div class="text-center">
                     <img src="https://via.placeholder.com/150" alt="No Donation History Icon">
                     <p>-- No Donation History Found --</p>
@@ -203,12 +205,12 @@
 
     function showAddDonationForm() {
         const form = document.getElementById('addDonationForm');
-        form.classList.toggle('d-none'); // Toggle visibility
+        form.classList.toggle('d-none');
     }
 
     function toggleAddAddressForm() {
         const form = document.getElementById('addAddressForm');
-        form.classList.toggle('d-none'); // Toggle visibility
+        form.classList.toggle('d-none');
     }
 </script>
 {% endblock %}

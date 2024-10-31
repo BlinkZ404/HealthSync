@@ -114,22 +114,27 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Static files (CSS, JavaScript, Images)
+# URL to access static files, should end with a slash
 STATIC_URL = '/static/'
+
+# Sets default primary key field type for models
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Directory where Django will collect all static files for deployment
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Additional locations of static files (for development)
 STATICFILES_DIRS = [
-    BASE_DIR / "static"]
+    BASE_DIR / "static"  # Directory for additional static files during development
+]
+
+import os  # Importing os module for path manipulations
+
+# URL to access media files, should end with a slash
+MEDIA_URL = '/media/'
+
+# Directory for uploaded media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Redirect URL after logout
+LOGOUT_REDIRECT_URL = 'login'
