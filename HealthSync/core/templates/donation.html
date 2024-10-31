@@ -1,10 +1,270 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar Filter Section -->
+        <div class="col-md-3">
+            <!-- Search for Blood Donor Card -->
+            <div class="card shadow-sm mb-3" style="border-radius: 8px;">
+                <div class="card-header bg-primary text-white text-center py-2" style="border-radius: 8px 8px 0 0;">
+                    <h6 class="mb-0">Search for Blood Donor</h6>
+                </div>
+                <div class="card-body">
+                    <!-- Blood Group Filter -->
+                    <div class="mb-3">
+                        <h6>Blood Group</h6>
+                        <select class="form-select" required>
+                            <option value="">Select Blood Group</option>
+                            <option>A+</option>
+                            <option>A-</option>
+                            <option>B+</option>
+                            <option>B-</option>
+                            <option>AB+</option>
+                            <option>AB-</option>
+                            <option>O+</option>
+                            <option>O-</option>
+                        </select>
+                    </div>
+
+                    <!-- Location Filter (Divisions and Districts) -->
+                    <div class="mb-3">
+                        <h6>Division</h6>
+                        <select class="form-select" required>
+                            <option value="">Select Division</option>
+                            <option>Barishal</option>
+                            <option>Chattogram</option>
+                            <option>Dhaka</option>
+                            <option>Khulna</option>
+                            <option>Mymensingh</option>
+                            <option>Rajshahi</option>
+                            <option>Rangpur</option>
+                            <option>Sylhet</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <h6>District</h6>
+                        <select class="form-select" required>
+                            <option value="">Select District</option>
+                            <option>Bagerhat</option>
+                            <option>Bandarban</option>
+                            <option>Barguna</option>
+                            <option>Barishal</option>
+                            <option>Bhola</option>
+                            <option>Bogura</option>
+                            <option>Brahmanbaria</option>
+                            <option>Chandpur</option>
+                            <option>Chattogram</option>
+                            <option>Chuadanga</option>
+                            <option>Cox's Bazar</option>
+                            <option>Dhaka</option>
+                            <option>Dinajpur</option>
+                            <option>Faridpur</option>
+                            <option>Feni</option>
+                            <option>Gaibandha</option>
+                            <option>Gazipur</option>
+                            <option>Gopalganj</option>
+                            <option>Habiganj</option>
+                            <option>Jamalpur</option>
+                            <option>Jashore</option>
+                            <option>Jhalokathi</option>
+                            <option>Jhenaidah</option>
+                            <option>Joypurhat</option>
+                            <option>Khagrachari</option>
+                            <option>Khulna</option>
+                            <option>Kishoreganj</option>
+                            <option>Kurigram</option>
+                            <option>Kushtia</option>
+                            <option>Lakshmipur</option>
+                            <option>Lalmonirhat</option>
+                            <option>Madaripur</option>
+                            <option>Magura</option>
+                            <option>Manikganj</option>
+                            <option>Meherpur</option>
+                            <option>Moulvibazar</option>
+                            <option>Munshiganj</option>
+                            <option>Mymensingh</option>
+                            <option>Naogaon</option>
+                            <option>Narail</option>
+                            <option>Narayanganj</option>
+                            <option>Narsingdi</option>
+                            <option>Natore</option>
+                            <option>Netrokona</option>
+                            <option>Nilphamari</option>
+                            <option>Noakhali</option>
+                            <option>Pabna</option>
+                            <option>Panchagarh</option>
+                            <option>Patuakhali</option>
+                            <option>Pirojpur</option>
+                            <option>Rajbari</option>
+                            <option>Rajshahi</option>
+                            <option>Rangamati</option>
+                            <option>Rangpur</option>
+                            <option>Satkhira</option>
+                            <option>Shariatpur</option>
+                            <option>Sherpur</option>
+                            <option>Sirajganj</option>
+                            <option>Sunamganj</option>
+                            <option>Sylhet</option>
+                            <option>Tangail</option>
+                            <option>Thakurgaon</option>
+                        </select>
+                    </div>
+
+                    <!-- Search Button -->
+                    <button class="btn btn-primary w-100 mb-3">Search</button>
+
+                    <!-- Register as a Donor Button -->
+                    <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#registerDonorModal">Register as a Donor</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blood Donor List Section -->
+        <div class="col-md-9">
+            <div class="alert alert-info text-center" role="alert">
+                <strong>Important:</strong> Report inappropriate data (Name, Phone number, or Blood Group) by email or phone.
+            </div>
+            <div class="row">
+                <!-- Example Blood Donor Cards -->
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm" style="border-radius: 8px;">
+                        <div class="card-body">
+                            <h5 class="card-title mb-1">MD Shuvo</h5>
+                            <p class="text-success">Available</p>
+                            <p><strong>Mobile No:</strong> 01737373745</p>
+                            <p><strong>Blood Group:</strong> A+</p>
+                            <p><strong>Location:</strong> Dhaka, Dhaka</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Registering as a Donor -->
+<div class="modal fade" id="registerDonorModal" tabindex="-1" aria-labelledby="registerDonorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerDonorModalLabel">Register as a Blood Donor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="donorName" class="form-label">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="donorName" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="donorMobile" class="form-label">Mobile No <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="donorMobile" placeholder="Enter your mobile number" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="donorBloodGroup" class="form-label">Blood Group <span class="text-danger">*</span></label>
+                        <select class="form-select" id="donorBloodGroup" required>
+                            <option value="">Select Blood Group</option>
+                            <option>A+</option>
+                            <option>A-</option>
+                            <option>B+</option>
+                            <option>B-</option>
+                            <option>AB+</option>
+                            <option>AB-</option>
+                            <option>O+</option>
+                            <option>O-</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="donorDivision" class="form-label">Division <span class="text-danger">*</span></label>
+                        <select class="form-select" id="donorDivision" required>
+                            <option value="">Select Division</option>
+                            <option>Barishal</option>
+                            <option>Chattogram</option>
+                            <option>Dhaka</option>
+                            <option>Khulna</option>
+                            <option>Mymensingh</option>
+                            <option>Rajshahi</option>
+                            <option>Rangpur</option>
+                            <option>Sylhet</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="donorDistrict" class="form-label">District <span class="text-danger">*</span></label>
+                        <select class="form-select" id="donorDistrict" required>
+                            <option value="">Select District</option>
+                            <option>Bagerhat</option>
+                            <option>Bandarban</option>
+                            <option>Barguna</option>
+                            <option>Barishal</option>
+                            <option>Bhola</option>
+                            <option>Bogura</option>
+                            <option>Brahmanbaria</option>
+                            <option>Chandpur</option>
+                            <option>Chattogram</option>
+                            <option>Chuadanga</option>
+                            <option>Cox's Bazar</option>
+                            <option>Dhaka</option>
+                            <option>Dinajpur</option>
+                            <option>Faridpur</option>
+                            <option>Feni</option>
+                            <option>Gaibandha</option>
+                            <option>Gazipur</option>
+                            <option>Gopalganj</option>
+                            <option>Habiganj</option>
+                            <option>Jamalpur</option>
+                            <option>Jashore</option>
+                            <option>Jhalokathi</option>
+                            <option>Jhenaidah</option>
+                            <option>Joypurhat</option>
+                            <option>Khagrachari</option>
+                            <option>Khulna</option>
+                            <option>Kishoreganj</option>
+                            <option>Kurigram</option>
+                            <option>Kushtia</option>
+                            <option>Lakshmipur</option>
+                            <option>Lalmonirhat</option>
+                            <option>Madaripur</option>
+                            <option>Magura</option>
+                            <option>Manikganj</option>
+                            <option>Meherpur</option>
+                            <option>Moulvibazar</option>
+                            <option>Munshiganj</option>
+                            <option>Mymensingh</option>
+                            <option>Naogaon</option>
+                            <option>Narail</option>
+                            <option>Narayanganj</option>
+                            <option>Narsingdi</option>
+                            <option>Natore</option>
+                            <option>Netrokona</option>
+                            <option>Nilphamari</option>
+                            <option>Noakhali</option>
+                            <option>Pabna</option>
+                            <option>Panchagarh</option>
+                            <option>Patuakhali</option>
+                            <option>Pirojpur</option>
+                            <option>Rajbari</option>
+                            <option>Rajshahi</option>
+                            <option>Rangamati</option>
+                            <option>Rangpur</option>
+                            <option>Satkhira</option>
+                            <option>Shariatpur</option>
+                            <option>Sherpur</option>
+                            <option>Sirajganj</option>
+                            <option>Sunamganj</option>
+                            <option>Sylhet</option>
+                            <option>Tangail</option>
+                            <option>Thakurgaon</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
