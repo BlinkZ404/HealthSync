@@ -37,11 +37,12 @@ urlpatterns = [
     path('b2b-registration/', views.b2b_registration, name='b2b_registration'),  # Business-to-business registration
 
     # Health services and product-related routes
-    path('medicine/', views.medicine, name='medicine'),  # Medicine page
+    path('medicine/', views.medicine, name='medicine'),  # Medicine view
+    path('medicine/<str:sku>/', views.medicine_page, name='medicine_page'), # Medicine page view
     path('doctors/', views.doctors, name='doctors'),  # Doctors listing page
     path('disease-prediction/', views.disease_prediction, name='disease_prediction'),  # Disease prediction page
     path('blood-donors/', views.donor_view, name='donors'), # Donor list page
-    path('add_donor/', views.add_donor, name='add_donor'), # Add donor info to donot list page
+    path('add_donor/', views.add_donor, name='add_donor'), # Add donor info to donor list page
 
     # Shopping and e-commerce routes
     path('cart/', views.cart, name='cart'),  # Shopping cart page
@@ -49,6 +50,8 @@ urlpatterns = [
 
     # Test page for development or debugging purposes
     path('test/', views.test, name='test'),  # Test page for functionality verification
+    path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('buy-now/<int:product_id>/', views.buy_now, name='buy_now'),
 ]
 
 # Add static and media URLs in development

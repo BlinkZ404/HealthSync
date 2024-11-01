@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -8,7 +8,9 @@ from django.contrib.auth.decorators import login_required
 from .models import Address
 from .models import Donation
 from django.contrib.auth import logout
-from .models import BloodDonor
+from .models import BloodDonor, Product, Manufacturer
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 def home(request):
     # Render the home page
@@ -219,6 +221,9 @@ def b2b_registration(request):
 def medicine(request):
     return render(request, 'medicine.html')
 
+def medicine_page(request):
+    return render(request, 'medicine_page.html')
+
 # Render the Doctors page
 def doctors(request):
     return render(request, 'doctors.html')
@@ -250,3 +255,54 @@ def test(request):
     return render(request, 'test.html')
 
 
+def medicine_page(request, sku):
+    product = get_object_or_404(Product, sku=sku)
+    return render(request, 'medicine_page.html', {'product': product})
+
+def medicine(request):
+    products = Product.objects.all()
+
+    # Apply sorting
+    sort_order = request.GET.get('sort')
+    if sort_order == 'asc':
+        products = products.order_by('price')
+    elif sort_order == 'desc':
+        products = products.order_by('-price')
+
+    # Apply filtering based on request parameters
+    availability = request.GET.getlist('availability')
+    if availability:
+        products = products.filter(availability__in=availability)
+
+    manufacturer = request.GET.getlist('manufacturer')
+    if manufacturer:
+        products = products.filter(manufacturer__name__in=manufacturer)
+
+    form = request.GET.getlist('form')
+    if form:
+        products = products.filter(form__in=form)
+
+    # Paginate the filtered and sorted queryset
+    paginator = Paginator(products, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'availability_options': [choice[0] for choice in Product.AVAILABILITY_CHOICES],
+        'form_options': [choice[0] for choice in Product.FORM_CHOICES],
+        'manufacturers': Manufacturer.objects.all(),
+        'selected_availability': availability,
+        'selected_form': form,
+        'selected_manufacturer': manufacturer,
+        'sort_order': sort_order,
+    }
+    return render(request, 'medicine.html', context)
+
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    return redirect('cart_page')
+
+def buy_now(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    return redirect('checkout')
