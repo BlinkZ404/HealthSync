@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46eeacc6-e5ed-4e40-a2c8-81c4cf04a820" name="Changes" comment="Added all the database files of Machine Learning  Disease predictor Functionality">
-      <change afterPath="$PROJECT_DIR$/HealthSync/core/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/disease_prediction.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/disease_prediction.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HealthSync/core/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +39,7 @@
   "keyToString": {
     "DefaultHtmlFileTemplate": "HTML File",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feature4",
+    "git-widget-placeholder": "Branch-4(DiseasePredict)",
     "last_opened_file_path": "F:/University Essential PDF/3-2 (2024) Spring-2024/CSE - 322 Software Lab/HealthSync/HealthSync/core",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
