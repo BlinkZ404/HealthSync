@@ -7,15 +7,13 @@
     <list default="true" id="46eeacc6-e5ed-4e40-a2c8-81c4cf04a820" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HealthSync/HealthSync/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/HealthSync/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HealthSync/core/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/apps.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HealthSync/core/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/user_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/user_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/donation.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/donation.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HealthSync/core/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HealthSync/core/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HealthSync/db.sqlite3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/HealthSync/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/db.sqlite3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

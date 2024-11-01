@@ -125,7 +125,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Additional locations of static files (for development)
 STATICFILES_DIRS = [
-    BASE_DIR / "static"  # Directory for additional static files during development
+    BASE_DIR / "core/static"  # Directory for additional static files during development
 ]
 
 import os  # Importing os module for path manipulations

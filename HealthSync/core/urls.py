@@ -39,8 +39,9 @@ urlpatterns = [
     # Health services and product-related routes
     path('medicine/', views.medicine, name='medicine'),  # Medicine page
     path('doctors/', views.doctors, name='doctors'),  # Doctors listing page
-    path('blood-donation/', views.donation, name='blood_donation'),  # Blood donation page
     path('disease-prediction/', views.disease_prediction, name='disease_prediction'),  # Disease prediction page
+    path('blood-donors/', views.donor_view, name='donors'), # Donor list page
+    path('add_donor/', views.add_donor, name='add_donor'), # Add donor info to donot list page
 
     # Shopping and e-commerce routes
     path('cart/', views.cart, name='cart'),  # Shopping cart page
