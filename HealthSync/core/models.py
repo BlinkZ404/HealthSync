@@ -34,3 +34,16 @@ class Donation(models.Model):
 
     def __str__(self):
         return f"Donation by {self.user.username} on {self.donation_date}"
+
+
+# Donormodel to save donor details
+class BloodDonor(models.Model):
+    name = models.CharField(max_length=100, default='Anonymous')  # Name cannot be null
+    mobile_number = models.CharField(max_length=15, blank=True, null=True)  # Allow nulls
+    blood_group = models.CharField(max_length=5)
+    division = models.CharField(max_length=100)
+    district = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.name} - {self.blood_group} ({self.mobile_number})"
+

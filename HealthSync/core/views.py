@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Address
 from .models import Donation
 from django.contrib.auth import logout
+from .models import BloodDonor
 
 def home(request):
     # Render the home page
@@ -161,6 +162,35 @@ def custom_logout(request):
     messages.success(request, "You have been logged out successfully.")
     return redirect('login')
 
+
+# Add a donor info on donation page
+def add_donor(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        mobile_number = request.POST.get('mobile_number')
+        blood_group = request.POST.get('blood_group')
+        division = request.POST.get('division')
+        district = request.POST.get('district')
+
+        # Save the donor information
+        BloodDonor.objects.create(
+            name=name,
+            mobile_number=mobile_number,
+            blood_group=blood_group,
+            division=division,
+            district=district
+        )
+        messages.success(request, "Donor registered successfully!")
+        return redirect('donors')
+
+    return redirect('donors')
+
+# Render the Donation page
+def donor_view(request):
+    donors = BloodDonor.objects.all()
+    return render(request, 'donation.html', {'donors': donors})
+
+
 # Render the About Us page
 def about(request):
     return render(request, 'about.html')
@@ -194,8 +224,6 @@ def doctors(request):
     return render(request, 'doctors.html')
 
 # Render the Donation page
-def donation(request):
-    return render(request, 'donation.html')
 
 # Render the Disease Prediction page
 def disease_prediction(request):
@@ -220,3 +248,5 @@ def error_404(request, exception):
 # Render the Test page
 def test(request):
     return render(request, 'test.html')
+
+
