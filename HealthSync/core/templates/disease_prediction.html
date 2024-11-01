@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <div class="container py-5">
     <h2 class="text-center mb-4">Disease Prediction</h2>
     <p class="text-center text-muted mb-3">Enter your symptoms to get a prediction of possible diseases. Please note that the prediction is not a substitute for professional medical advice.</p>
@@ -15,18 +16,29 @@
                 <div class="card-body">
                     <form action="{% url 'disease_prediction' %}" method="POST">
                         {% csrf_token %}
-
                         <!-- Symptom Search and Add -->
                         <div class="mb-3">
                             <label for="symptomInput" class="form-label">Enter Symptoms</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="symptomInput" placeholder="Start typing a symptom..." list="symptomSuggestions">
+                                <input type="text" name="symptoms" class="form-control" id="symptomInput" placeholder="Start typing a symptom..." list="symptomSuggestions">
                                 <datalist id="symptomSuggestions">
-                                    <option value="Fever">
-                                    <option value="Cough">
-                                    <option value="Headache">
-                                    <option value="Sore Throat">
-                                    <option value="Fatigue">
+                                    <option value="itching">
+                                    <option value="skin_rash">
+                                    <option value="shivering">
+                                    <option value="joint_pain">
+                                    <option value="stomach_pain">
+                                    <option value="acidity">
+                                    <option value="muscle_wasting">
+                                    <option value="vomiting">
+                                    <option value="fatigue">
+                                    <option value="weight_gain">
+                                    <option value="anxiety">
+                                    <option value="cold_hands_and_feets">
+                                    <option value="weight_loss">
+                                    <option value="restlessness">
+                                    <option value="irregular_sugar_level">
+                                    <option value="cough">
+                                    <option value="high_fever">
                                 </datalist>
                                 <button type="button" class="btn btn-primary" onclick="addSymptom()">Add Symptom</button>
                             </div>
@@ -51,14 +63,102 @@
         </div>
     </div>
 
+
+
+
+{% if predicted_disease %}
     <!-- Prediction Result Display -->
-    {% if prediction %}
+    <div class="container my-5">
+        <h2 class="mb-4 text-center">Predicted Disease: {{ predicted_disease }}</h2>
         <div class="alert alert-info text-center mt-4" role="alert">
-            <h5>Predicted Disease: {{ prediction }}</h5>
             <p>Please consult a healthcare provider for further evaluation and confirmation.</p>
         </div>
-    {% endif %}
+        <div class="row">
+            <!-- Description Card -->
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Description</h5>
+                        <p class="card-text">{{ description }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Specialist Card -->
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Specialist Doctor</h5>
+                        <p class="card-text">{{ specialist }}</p>
+                    </div>
+                </div>
+            </div>
+                        <!-- Precautions Card -->
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Precautions</h5>
+                            {% for item in precautions %}
+                                <li class="list-group-item">{{ item }}</li>
+                            {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+                        <!-- Workout Tips Card -->
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Workout Tips</h5>
+                            {% for item in workout %}
+                                <li class="list-group-item">{{ item }}</li>
+                            {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Medications Card -->
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Medications</h5>
+                        <p class="card-text">{{ medications }}</p>
+                    </div>
+                </div>
+            </div>
+
+ <!-- Diet Recommendations Card -->
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Diet Recommendations</h5>
+                        <p class="card-text">{{ diets }}</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 </div>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
     const symptomList = document.getElementById('symptomList');
@@ -124,6 +224,34 @@
         font-size: 0.8rem;
         padding: 0.3rem 0.6rem;
     }
+
+    /*NEW*/
+    body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .card-title {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .list-group-numbered {
+            list-style-type: decimal;
+            padding-left: 20px;
+        }
+        .list-group-item {
+            border: none;
+            padding-left: 0;
+            font-size: 16px;
+        }
+        .card-text, .card-title {
+            color: #495057;
+        }
 </style>
 
 {% endblock %}

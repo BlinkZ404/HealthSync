@@ -9,6 +9,7 @@ from .models import Address
 from .models import Donation
 from django.contrib.auth import logout
 from .models import BloodDonor
+from .utils import get_predicted_value, helper
 
 def home(request):
     # Render the home page
@@ -226,8 +227,6 @@ def doctors(request):
 # Render the Donation page
 
 # Render the Disease Prediction page
-def disease_prediction(request):
-    return render(request, 'disease_prediction.html')
 
 # Render the Appointment page
 def appointment(request):
@@ -248,5 +247,47 @@ def error_404(request, exception):
 # Render the Test page
 def test(request):
     return render(request, 'test.html')
+
+
+# Disease Prediction
+def format_list(title, items):
+    formatted_items = "\n".join([f"{i + 1}. {item}" for i, item in enumerate(items)])
+    return f"{title}:\n{formatted_items}"
+
+
+def disease_prediction(request):
+    if request.session.get('show_results'):
+        request.session.pop('show_results')
+        return render(request, 'disease_prediction.html')
+    if request.method == 'POST':
+        # Assuming 'symptoms' is passed through form input in POST request
+        symptoms = request.POST.get('symptoms')
+        user_symptoms = [s.strip() for s in symptoms.split(',')]
+        user_symptoms = [symptom.strip("[]' ") for symptom in user_symptoms]
+
+        # Get the predicted disease and details
+        predicted_disease = get_predicted_value(user_symptoms)
+        desc, pre, med, spe, die, wrkout = helper(predicted_disease)
+
+        # Format each list item with numbered prefixes for the template
+        pre = [f"{i + 1}. {precaution}" for i, precaution in enumerate(pre[0])]
+        wrkout = [f"{i + 1}. {tip}" for i, tip in enumerate(wrkout)]
+
+        med = "\n".join([f"{i+1}. {med}" for i, med in enumerate(med)])
+        die = "\n".join([f"{i+1}. {diet}" for i, diet in enumerate(die)])
+
+        context = {
+            'predicted_disease': predicted_disease,
+            'description': desc,
+            'precautions': pre,
+            'medications': med,
+            'specialist': spe[0],
+            'diets': die,
+            'workout': wrkout
+        }
+
+        return render(request, 'disease_prediction.html', context)
+
+    return render(request, 'disease_prediction.html')
 
 
