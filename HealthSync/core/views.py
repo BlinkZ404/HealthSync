@@ -1,14 +1,19 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from .models import Profile
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Address
 from .models import Donation
 from django.contrib.auth import logout
-from .models import BloodDonor
+from .models import BloodDonor, Product, Manufacturer, CartItem, Order, OrderItem
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
+from decimal import Decimal
+from django.db import transaction
 
 def home(request):
     # Render the home page
@@ -74,11 +79,17 @@ def user_profile(request):
     # Get or create the profile associated with the user
     profile, created = Profile.objects.get_or_create(user=request.user)
 
-    # Pass user and profile data to the template
-    return render(request, 'user_profile.html', {
+    # Fetch all orders for the logged-in user
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+
+    # Pass user, profile, and order data to the template
+    context = {
         'user': request.user,
-        'profile': profile
-    })
+        'profile': profile,
+        'orders': orders
+    }
+
+    return render(request, 'user_profile.html', context)
 
 # Handle profile updates
 @login_required
@@ -120,19 +131,6 @@ def update_profile(request):
     return redirect('user_profile')
 
 
-# Add a new address for the authenticated user
-def add_address(request):
-    if request.method == 'POST':
-        address_name = request.POST.get('address_name')
-        address_number = request.POST.get('address_number')
-        address_road = request.POST.get('address_road')
-
-        # Create an Address object linked to the user
-        Address.objects.create(user=request.user, name=address_name, number=address_number, road=address_road)
-        messages.success(request, "Address added successfully.")
-        return redirect('user_profile')  # Redirect back to profile page
-
-    return redirect('user_profile')
 
 # Add a donation entry for the authenticated user
 def add_donation(request):
@@ -219,6 +217,9 @@ def b2b_registration(request):
 def medicine(request):
     return render(request, 'medicine.html')
 
+def medicine_page(request):
+    return render(request, 'medicine_page.html')
+
 # Render the Doctors page
 def doctors(request):
     return render(request, 'doctors.html')
@@ -249,4 +250,192 @@ def error_404(request, exception):
 def test(request):
     return render(request, 'test.html')
 
+
+def medicine_page(request, sku):
+    product = get_object_or_404(Product, sku=sku)
+    return render(request, 'medicine_page.html', {'product': product})
+
+def medicine(request):
+    products = Product.objects.all()
+
+    # Apply sorting
+    sort_order = request.GET.get('sort')
+    if sort_order == 'asc':
+        products = products.order_by('price')
+    elif sort_order == 'desc':
+        products = products.order_by('-price')
+
+    # Apply filtering based on request parameters
+    availability = request.GET.getlist('availability')
+    if availability:
+        products = products.filter(availability__in=availability)
+
+    manufacturer = request.GET.getlist('manufacturer')
+    if manufacturer:
+        products = products.filter(manufacturer__name__in=manufacturer)
+
+    form = request.GET.getlist('form')
+    if form:
+        products = products.filter(form__in=form)
+
+    # Paginate the filtered and sorted queryset
+    paginator = Paginator(products, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'availability_options': [choice[0] for choice in Product.AVAILABILITY_CHOICES],
+        'form_options': [choice[0] for choice in Product.FORM_CHOICES],
+        'manufacturers': Manufacturer.objects.all(),
+        'selected_availability': availability,
+        'selected_form': form,
+        'selected_manufacturer': manufacturer,
+        'sort_order': sort_order,
+    }
+    return render(request, 'medicine.html', context)
+
+
+
+def apply_discount_code(request):
+    if request.method == 'POST':
+        discount_code = request.POST.get('discount_code', '')
+        return redirect('view_cart')
+    return HttpResponseRedirect('/')
+
+
+
+def apply_gift_voucher(request):
+    if request.method == 'POST':
+        gift_voucher = request.POST.get('gift_voucher', '')
+        return redirect('view_cart')
+    return HttpResponseRedirect('/')
+
+
+
+
+@login_required
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    quantity = int(request.POST.get('quantity', 1))
+
+    cart_item, created = CartItem.objects.get_or_create(user=request.user, product=product)
+    if not created:
+        cart_item.quantity += quantity
+    else:
+        cart_item.quantity = quantity
+    cart_item.save()
+
+    messages.success(request, f"{product.name} added to cart.")
+    return redirect('view_cart')
+
+
+
+@login_required(login_url='login')
+def view_cart(request):
+    cart_items = CartItem.objects.filter(user=request.user)
+    subtotal = sum(item.item_total() for item in cart_items)
+    total = subtotal  # Adjust with any additional fees if applicable
+
+    context = {
+        'cart_items': cart_items,
+        'subtotal': subtotal,
+        'total': total,
+    }
+    return render(request, 'cart.html', context)
+
+
+
+@login_required
+def update_cart_item_quantity(request, item_id):
+    if request.method == 'POST':
+        cart_item = get_object_or_404(CartItem, id=item_id, user=request.user)
+        new_quantity = int(request.POST.get('quantity', 1))
+        if new_quantity > 0:
+            cart_item.quantity = new_quantity
+            cart_item.save()
+            messages.success(request, "Quantity updated.")
+        else:
+            messages.error(request, "Invalid quantity.")
+    return redirect('view_cart')
+
+
+
+@login_required
+def remove_from_cart(request, item_id):
+    cart_item = get_object_or_404(CartItem, id=item_id, user=request.user)
+    cart_item.delete()
+    messages.success(request, "Item removed from cart.")
+    return redirect('view_cart')
+
+
+
+@login_required(login_url='login')
+def checkout(request):
+    cart_items = CartItem.objects.filter(user=request.user)
+
+    if not cart_items.exists():
+        messages.warning(request, "Your cart is empty. Please add items to proceed to checkout.")
+        return redirect('view_cart')  # Redirect to the cart page
+
+    if request.method == 'POST':
+        full_name = request.POST.get("full_name")
+        address = request.POST.get('address')
+        phone_number = request.POST.get('phone_number')
+        delivery_method = request.POST.get('delivery_method')
+        payment_method = request.POST.get('payment_method')
+
+        subtotal = sum(item.item_total() for item in cart_items)
+        if delivery_method == 'Express Delivery':
+            delivery_fee = Decimal('100.00')
+        else:
+            delivery_fee = Decimal('50.00')
+        discount = Decimal('0.00')
+        total_amount = subtotal + delivery_fee - discount
+
+        order = Order.objects.create(
+            user=request.user,
+            full_name=full_name,
+            address=address,
+            phone_number=phone_number,
+            delivery_method=delivery_method,
+            payment_method=payment_method,
+            delivery_fee=delivery_fee,
+            discount=discount,
+            total_amount=total_amount,
+        )
+
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                product=item.product,
+                quantity=item.quantity,
+                item_total=item.item_total(),
+            )
+            item.delete()
+
+        messages.success(request, "Order placed successfully!")
+        return redirect('order_confirmation', order_id=order.id)
+
+    context = {
+        'cart_items': cart_items,
+        'subtotal': sum(item.item_total() for item in cart_items),
+        'delivery_fee': 50,
+        'discount': 0,
+        'total': sum(item.item_total() for item in cart_items) + 50 - 0,
+    }
+    return render(request, 'checkout.html', context)
+
+
+@login_required(login_url='login')  # Ensures the user is logged in
+def order_confirmation(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+
+    # Check if the order belongs to the current logged-in user
+    if order.user != request.user:
+        messages.error(request, "You do not have permission to view this order.")
+        return redirect('home')  # Redirect to a suitable page, such as home
+
+    # If the user is authorized, display the order confirmation page
+    return render(request, 'order_confirmation.html', {'order': order})
 

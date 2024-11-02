@@ -5,60 +5,34 @@
     <div class="row">
         <!-- Sidebar Filter Section -->
         <div class="col-md-3">
-            <!-- Price Range Filter with Dual Slider -->
-            <div class="card shadow-sm mb-3" style="border-radius: 8px;">
-                <div class="card-header bg-primary text-white text-center py-2" style="border-radius: 8px 8px 0 0;">
-                    <h6 class="mb-0">Price Range</h6>
-                </div>
-                <div class="card-body py-2">
-                    <div class="range-slider">
-                        <input type="range" class="form-range" min="0" max="5000" step="100" id="minPrice" value="1500">
-                        <input type="range" class="form-range" min="0" max="5000" step="100" id="maxPrice" value="5000">
-                    </div>
-                    <div class="d-flex justify-content-between mt-2">
-                        <span id="minPriceLabel">1500</span>
-                        <span id="maxPriceLabel">5,000</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Accordion Filters -->
-            <div class="accordion" id="filterAccordion">
+            <form id="filterForm" method="get">
                 <!-- Availability Filter -->
                 <div class="card shadow-sm mb-3" style="border-radius: 8px;">
                     <div class="card-header bg-primary text-white text-center py-2" style="border-radius: 8px 8px 0 0;">
                         <h6 class="mb-0">Availability</h6>
                     </div>
                     <div class="card-body py-2">
-                        <div class="form-check my-1">
-                            <input class="form-check-input" type="checkbox" id="inStock" style="transform: scale(1.1);">
-                            <label class="form-check-label ms-2" for="inStock" style="font-size: 0.9rem;">In Stock</label>
-                        </div>
-                        <div class="form-check my-1">
-                            <input class="form-check-input" type="checkbox" id="preOrder" style="transform: scale(1.1);">
-                            <label class="form-check-label ms-2" for="preOrder" style="font-size: 0.9rem;">Pre Order</label>
-                        </div>
-                        <div class="form-check my-1">
-                            <input class="form-check-input" type="checkbox" id="outOfStock" style="transform: scale(1.1);">
-                            <label class="form-check-label ms-2" for="outOfStock" style="font-size: 0.9rem;">Out of Stock</label>
-                        </div>
+                        {% for option in availability_options %}
+                            <div class="form-check my-1">
+                                <input class="form-check-input" type="checkbox" name="availability" value="{{ option }}" {% if option in selected_availability %}checked{% endif %} onchange="document.getElementById('filterForm').submit();">
+                                <label class="form-check-label ms-2" style="font-size: 0.9rem;">{{ option }}</label>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
 
-                <!-- Brand Filter -->
+                <!-- Manufacturer Filter -->
                 <div class="card shadow-sm mb-3" style="border-radius: 8px;">
                     <div class="card-header bg-primary text-white text-center py-2" style="border-radius: 8px 8px 0 0;">
-                        <h6 class="mb-0">Brand</h6>
+                        <h6 class="mb-0">Manufacturer</h6>
                     </div>
                     <div class="card-body py-2">
-                        <div class="form-check my-1">
-                            <input class="form-check-input" type="checkbox" id="brandA" style="transform: scale(1.1);">
-                            <label class="form-check-label ms-2" for="brandA" style="font-size: 0.9rem;">Brand A</label>
-                        </div>
-                        <div class="form-check my-1">
-                            <input class="form-check-input" type="checkbox" id="brandB" style="transform: scale(1.1);">
-                            <label class="form-check-label ms-2" for="brandB" style="font-size: 0.9rem;">Brand B</label>
-                        </div>
+                        {% for manufacturer in manufacturers %}
+                            <div class="form-check my-1">
+                                <input class="form-check-input" type="checkbox" name="manufacturer" value="{{ manufacturer.name }}" {% if manufacturer.name in selected_manufacturer %}checked{% endif %} onchange="document.getElementById('filterForm').submit();">
+                                <label class="form-check-label ms-2" style="font-size: 0.9rem;">{{ manufacturer.name }}</label>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -68,140 +42,109 @@
                         <h6 class="mb-0">Form</h6>
                     </div>
                     <div class="card-body py-2">
-                        <div class="form-check my-1">
-                            <input class="form-check-input" type="checkbox" id="tablet" style="transform: scale(1.1);">
-                            <label class="form-check-label ms-2" for="tablet" style="font-size: 0.9rem;">Tablet</label>
-                        </div>
-                        <div class="form-check my-1">
-                            <input class="form-check-input" type="checkbox" id="capsule" style="transform: scale(1.1);">
-                            <label class="form-check-label ms-2" for="capsule" style="font-size: 0.9rem;">Capsule</label>
-                        </div>
-                        <div class="form-check my-1">
-                            <input class="form-check-input" type="checkbox" id="syrup" style="transform: scale(1.1);">
-                            <label class="form-check-label ms-2" for="syrup" style="font-size: 0.9rem;">Syrup</label>
-                        </div>
+                        {% for form in form_options %}
+                            <div class="form-check my-1">
+                                <input class="form-check-input" type="checkbox" name="form" value="{{ form }}" {% if form in selected_form %}checked{% endif %} onchange="document.getElementById('filterForm').submit();">
+                                <label class="form-check-label ms-2" style="font-size: 0.9rem;">{{ form }}</label>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
 
-        <!-- Product Grid Section -->
+        <!-- Medicine Grid Section -->
         <div class="col-md-9">
             <div class="d-flex justify-content-between mb-3">
                 <h5>Medicines</h5>
                 <div class="dropdown">
                     <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        Sort By: Default
+                        Sort By: {{ sort_order|default:"Default" }}
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="sortDropdown">
-                        <li><a class="dropdown-item" href="#">Price: Low to High</a></li>
-                        <li><a class="dropdown-item" href="#">Price: High to Low</a></li>
-                        <li><a class="dropdown-item" href="#">New Arrivals</a></li>
+                        <li><a class="dropdown-item" href="?{% for key, value in request.GET.items %}{% if key != 'sort' %}{{ key }}={{ value }}&{% endif %}{% endfor %}sort=asc">Price: Low to High</a></li>
+                        <li><a class="dropdown-item" href="?{% for key, value in request.GET.items %}{% if key != 'sort' %}{{ key }}={{ value }}&{% endif %}{% endfor %}sort=desc">Price: High to Low</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="row">
-                <!-- Medicine Item 1 -->
-                <div class="col-md-4 col-sm-6 mb-3">
-                    <div class="card h-100 shadow-sm" style="border-radius: 8px;">
-                        <span class="badge bg-danger position-absolute top-0 start-0 m-2">Save: 200৳</span>
-                        <img src="{% static 'img/medicine-1.jpg' %}" class="card-img-top p-2 rounded" alt="Medicine Name">
-                        <div class="card-body text-center p-2">
-                            <h6 class="card-title mb-1" style="font-size: 1rem;">Paracetamol 500mg</h6>
-                            <p class="card-text text-muted small mb-1">Relieves pain and reduces fever.</p>
-                            <p><strong class="text-primary">400৳</strong> <del class="text-muted small">600৳</del></p>
-                            <a href="#" class="btn btn-primary btn-sm w-100 mb-1">Buy Now</a>
-                            <a href="#" class="btn btn-outline-secondary btn-sm w-100">Add to Cart</a>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Medicine Item 2 -->
-                <div class="col-md-4 col-sm-6 mb-3">
-                    <div class="card h-100 shadow-sm" style="border-radius: 8px;">
-                        <span class="badge bg-danger position-absolute top-0 start-0 m-2">Save: 100৳</span>
-                        <img src="{% static 'img/medicine-2.jpg' %}" class="card-img-top p-2 rounded" alt="Medicine Name">
-                        <div class="card-body text-center p-2">
-                            <h6 class="card-title mb-1" style="font-size: 1rem;">Ibuprofen 400mg</h6>
-                            <p class="card-text text-muted small mb-1">Reduces pain, inflammation, and fever.</p>
-                            <p><strong class="text-primary">400৳</strong> <del class="text-muted small">500৳</del></p>
-                            <a href="#" class="btn btn-primary btn-sm w-100 mb-1">Buy Now</a>
-                            <a href="#" class="btn btn-outline-secondary btn-sm w-100">Add to Cart</a>
+            <div class="row" id="medicineList">
+                {% for product in page_obj %}
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4 medicine-item" data-price="{{ product.price }}" data-availability="{{ product.availability }}" data-manufacturer="{{ product.manufacturer.name }}" data-form="{{ product.form }}">
+                        <div class="card h-100 shadow-sm" style="border-radius: 8px;">
+                            <div class="position-relative">
+                                {% if product.discount_amount %}
+                                    <span class="badge bg-danger position-absolute top-0 end-0 m-1">Save: {{ product.discount_amount }} BDT</span>
+                                {% endif %}
+                                <img src="{{ product.image.url }}" class="card-img-top p-3 rounded" alt="{{ product.name }}" style="height: 150px; object-fit: contain;">
+                            </div>
+                            <div class="card-body text-center p-3">
+                                <h6 class="card-title mb-1" style="font-size: 0.85rem;">
+                                    <a href="{% url 'medicine_page' product.sku %}" class="text-dark text-decoration-none">{{ product.name }}</a>
+                                </h6>
+                                <p class="text-muted small mb-1">{{ product.manufacturer.name }}</p>
+
+                                <!-- Availability Status with Inline Color Style -->
+                                <p class="mb-1" style="{% if product.availability == 'In Stock' %}color: green; font-weight: bold;{% else %}color: red; font-weight: bold;{% endif %}">
+                                    {{ product.availability }}
+                                </p>
+
+                                <p class="text-primary mb-0" style="font-size: 1rem;"><strong>{{ product.price }} BDT</strong></p>
+                                {% if product.original_price %}
+                                    <p class="text-muted mb-1" style="font-size: 0.9rem;"><del>{{ product.original_price }} BDT</del></p>
+                                {% endif %}
+                                <form method="post" action="{% url 'add_to_cart' product.id %}">
+                                    {% csrf_token %}
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <input type="number" id="quantity{{ product.id }}" name="quantity" value="1" min="1" class="form-control form-control-sm me-2" style="width: 50px; font-size: 0.85rem;">
+                                        <button type="submit" class="btn btn-primary btn-sm flex-grow-1" style="background-color: #007bff; border-color: #007bff;">Add to Cart</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination Controls -->
+            <div class="d-flex justify-content-center mt-4">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% for num in page_obj.paginator.page_range %}
+                            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
 </div>
+
 <script>
-    const minPriceSlider = document.getElementById('minPrice');
-    const maxPriceSlider = document.getElementById('maxPrice');
-    const minPriceLabel = document.getElementById('minPriceLabel');
-    const maxPriceLabel = document.getElementById('maxPriceLabel');
-    const minGap = 100;
+    function filterMedicines() {
+        document.getElementById('filterForm').submit();
+    }
 
-    // Ensure the sliders move within range and update labels
-    minPriceSlider.addEventListener('input', () => {
-        const minPrice = parseInt(minPriceSlider.value);
-        const maxPrice = parseInt(maxPriceSlider.value);
-
-        if (minPrice >= maxPrice - minGap) {
-            minPriceSlider.value = maxPrice - minGap;
-        }
-        minPriceLabel.textContent = minPriceSlider.value;
-    });
-
-    maxPriceSlider.addEventListener('input', () => {
-        const minPrice = parseInt(minPriceSlider.value);
-        const maxPrice = parseInt(maxPriceSlider.value);
-
-        if (maxPrice <= minPrice + minGap) {
-            maxPriceSlider.value = minPrice + minGap;
-        }
-        maxPriceLabel.textContent = maxPriceSlider.value;
-    });
-
-    // Initialize display values on load
-    minPriceLabel.textContent = minPriceSlider.value;
-    maxPriceLabel.textContent = maxPriceSlider.value;
+    function sortMedicines(order) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('sort', order);
+        window.location.href = url;
+    }
 </script>
-
-<style>
-    .range-slider {
-        position: relative;
-        height: 1rem;
-        margin-top: 10px;
-    }
-
-    .range-slider input[type="range"] {
-        position: absolute;
-        width: 100%;
-        -webkit-appearance: none;
-        background: none;
-        pointer-events: none;
-    }
-
-    .range-slider input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        pointer-events: all;
-        width: 1rem;
-        height: 1rem;
-        background: #007bff;
-        border-radius: 50%;
-        cursor: pointer;
-        margin-top: -5px; /* Center thumb vertically */
-        border: 2px solid white; /* Add white border for contrast */
-    }
-
-    .range-slider input[type="range"]::-moz-range-thumb {
-        width: 1rem;
-        height: 1rem;
-        background: #007bff;
-        border-radius: 50%;
-        cursor: pointer;
-        border: 2px solid white;
-    }
-</style>
 {% endblock %}
