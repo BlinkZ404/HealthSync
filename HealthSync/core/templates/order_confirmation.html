@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-center mb-4">Order #{{ order.id }}</h2>
+
+    <div class="row">
+        <!-- Order Details Section -->
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Order Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-secondary"><i class="fas fa-envelope"></i> Contact Information</h6>
+                            <p>Email: <span class="text-muted">{{ order.user.email }}</span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-secondary"><i class="fas fa-credit-card"></i> Payment</h6>
+                            <p>{{ order.payment_method }} - <span class="text-success">{{ order.total_amount }} BDT</span></p>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-secondary"><i class="fas fa-truck"></i> Shipping Method</h6>
+                        <p>{{ order.delivery_method }}</p>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold text-secondary"><i class="fas fa-map-marker-alt"></i> Shipping Address</h6>
+                        <p><strong>Name:</strong> {{ order.full_name }}</p>
+                        <p><strong>Number:</strong> {{ order.phone_number }}</p>
+                        <p><strong>Address:</strong> {{ order.address }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary Section -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-receipt"></i> Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    {% for item in order.items.all %}
+                    <div class="d-flex mb-3 align-items-center">
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-fluid rounded me-3 border" style="width: 60px; height: 60px;">
+                        <div>
+                            <strong>{{ item.product.name }}</strong>
+                            <p class="mb-0 text-muted">{{ item.product.manufacturer.name }}</p>
+                            <p class="mb-0">{{ item.product.price }} x {{ item.quantity }} BDT</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-secondary">Subtotal:</span>
+                        <strong>{{ item.item_total|floatformat:2 }} BDT</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-secondary">Shipping:</span>
+                        <strong>{{ order.delivery_fee|floatformat:2 }} BDT</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-secondary">Discount:</span>
+                        <strong class="text-danger">-{{ order.discount|floatformat:2 }} BDT</strong>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <span class="fw-bold text-dark">Total:</span>
+                        <strong class="text-primary">{{ order.total_amount|floatformat:2 }} BDT</strong>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Continue Shopping Button -->
+    <div class="d-flex justify-content-center mt-4">
+        <a href="{% url 'home' %}" class="btn btn-primary btn-lg px-5 py-2"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
+    </div>
+</div>
+
+<style>
+    .card-header {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+    }
+    .text-muted {
+        font-size: 0.9rem;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        font-size: 1.1rem;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    .text-primary {
+        color: #007bff;
+        font-weight: bold;
+    }
+    .text-secondary {
+        color: #6c757d;
+    }
+    .text-success {
+        color: #28a745;
+    }
+    .fw-bold {
+        font-weight: 600;
+    }
+    .border {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+</style>
+
+<!-- Font Awesome for Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}

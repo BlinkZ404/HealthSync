@@ -9,38 +9,42 @@
         </div>
 
         <!-- Product Details Section -->
-        <div class="col-md-6">
-            <h2 class="fw-bold mb-2">{{ product.name }}</h2>
-            <div class="d-flex align-items-center mb-3">
-                <span class="text-primary h4 me-2">{{ product.price }}৳</span>
-                {% if product.original_price %}
-                    <del class="text-muted me-3">{{ product.original_price }}৳</del>
-                    <span class="badge bg-primary">Save {{ product.discount_percentage }}%</span>
-                {% endif %}
+        <div class="col-md-6 d-flex flex-column justify-content-between">
+            <div>
+                <h2 class="fw-bold mb-3">{{ product.name }}</h2>
+                <div class="d-flex align-items-center mb-3">
+                    <span class="text-primary h4 me-2">{{ product.price }} BDT</span>
+                    {% if product.original_price %}
+                        <del class="text-muted me-3">{{ product.original_price }} BDT</del>
+                        <span class="badge bg-primary">Save {{ product.discount_percentage }}%</span>
+                    {% endif %}
+                </div>
+
+                <!-- Short Description -->
+                <p class="text-muted mb-3">{{ product.short_description }}</p>
+
+                <!-- Product Information Fields with moderate spacing -->
+                <p class="mb-2"><strong>Form:</strong> {{ product.form }}</p>
+                <p class="mb-2"><strong>Pack Size:</strong> {{ product.pack_size }}</p>
+                <p class="mb-2"><strong>Manufacturer:</strong> {{ product.manufacturer }}</p>
+                <p class="mb-2"><strong>Availability:</strong>
+                    {% if product.availability == "In Stock" %}
+                        <span class="text-success">In Stock</span>
+                    {% else %}
+                        <span class="text-danger">Out of Stock</span>
+                    {% endif %}
+                </p>
             </div>
 
-            <!-- Short Description -->
-            <p class="text-muted mb-4">{{ product.short_description }}</p>
-
-            <!-- Individual Product Information Fields -->
-            <p><strong>Form:</strong> {{ product.form }}</p>
-            <p><strong>Pack Size:</strong> {{ product.pack_size }}</p>
-            <p><strong>Manufacturer:</strong> {{ product.manufacturer }}</p>
-            <p><strong>Availability:</strong>
-                {% if product.availability == "In Stock" %}
-                    <span class="text-success">In Stock</span>
-                {% else %}
-                    <span class="text-danger">Out of Stock</span>
-                {% endif %}
-            </p>
-
-            <!-- Quantity Selector and Action Buttons in a Single Row -->
-            <div class="d-flex align-items-center mb-3">
-                <label for="quantity" class="me-2">Quantity:</label>
-                <input type="number" id="quantity" class="form-control me-3" style="width: 60px;" value="1" min="1">
-                <button class="btn btn-outline-primary flex-grow-1 me-2" style="height: 45px;">Add to Cart</button>
-                <button class="btn btn-primary flex-grow-1" style="height: 45px;">Buy Now</button>
-            </div>
+            <!-- Quantity Selector and Add to Cart Button -->
+            <form method="post" action="{% url 'add_to_cart' product.id %}">
+                {% csrf_token %}
+                <div class="d-flex align-items-center mb-3">
+                    <label for="quantity" class="me-2">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" class="form-control form-control-sm me-3" style="width: 60px;" value="1" min="1">
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 200px;">Add to Cart</button>
+            </form>
         </div>
     </div>
 
@@ -79,13 +83,15 @@
     .fw-bold {
         font-size: 1.5rem;
     }
-    .btn-outline-primary {
-        color: #007bff;
-        border-color: #007bff;
-    }
-    .btn-outline-primary:hover {
+    .btn-primary {
         color: white;
         background-color: #007bff;
+        border-color: #007bff;
+        font-size: 1rem;
+        padding: 0.6rem 0;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
     }
     .text-success {
         color: #28a745 !important;

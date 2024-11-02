@@ -23,7 +23,7 @@ urlpatterns = [
     # Profile and user information routes
     path('profile/', views.user_profile, name='user_profile'),  # User profile page
     path('update_profile/', views.update_profile, name='update_profile'),  # Update profile information
-    path('add_address/', views.add_address, name='add_address'),  # Add address to user's profile
+
     path('add_donation/', views.add_donation, name='add_donation'),  # Add donation record to user's profile
 
     # Informational and legal pages
@@ -45,13 +45,17 @@ urlpatterns = [
     path('add_donor/', views.add_donor, name='add_donor'), # Add donor info to donor list page
 
     # Shopping and e-commerce routes
-    path('cart/', views.cart, name='cart'),  # Shopping cart page
-    path('checkout/', views.checkout, name='checkout'),  # Checkout page
+    path('cart/', views.view_cart, name='view_cart'),
+    path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('update-cart-item/<int:item_id>/', views.update_cart_item_quantity, name='update_cart_item_quantity'),
+    path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('apply_discount_code/', views.apply_discount_code, name='apply_discount_code'),
+    path('apply_gift_voucher/', views.apply_gift_voucher, name='apply_gift_voucher'),
+    path('checkout/', views.checkout, name='checkout'),
+    path('order-confirmation/<int:order_id>/', views.order_confirmation, name='order_confirmation'),
 
     # Test page for development or debugging purposes
     path('test/', views.test, name='test'),  # Test page for functionality verification
-    path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
-    path('buy-now/<int:product_id>/', views.buy_now, name='buy_now'),
 ]
 
 # Add static and media URLs in development
@@ -61,3 +65,5 @@ if settings.DEBUG:
 
 # Custom 404 error handler route
 handler404 = 'core.views.error_404'  # Custom error handler for 404 page not found
+
+

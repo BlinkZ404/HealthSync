@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
+from django.conf import settings
+from decimal import Decimal
 
 # Profile model to extend the User model with additional attributes
 class Profile(models.Model):
@@ -13,16 +15,6 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Profile"
 
-# Address model to store user's address details
-class Address(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    number = models.CharField(max_length=15)
-    road = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.name} - {self.road}"
 
 # Donation model to track user donation details
 class Donation(models.Model):
@@ -37,7 +29,7 @@ class Donation(models.Model):
         return f"Donation by {self.user.username} on {self.donation_date}"
 
 
-# Donormodel to save donor details
+# Donor model to save donor details
 class BloodDonor(models.Model):
     name = models.CharField(max_length=100, default='Anonymous')
     mobile_number = models.CharField(max_length=15, blank=True, null=True)
@@ -48,6 +40,7 @@ class BloodDonor(models.Model):
     def __str__(self):
         return f"{self.name} - {self.blood_group} ({self.mobile_number})"
 
+# Manufacturer model to save manufacturer details
 class Manufacturer(models.Model):
     name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15)
@@ -56,7 +49,7 @@ class Manufacturer(models.Model):
     def __str__(self):
         return self.name
 
-
+# Product model to save product details
 class Product(models.Model):
     IN_STOCK = 'In Stock'
     OUT_OF_STOCK = 'Out of Stock'
@@ -98,4 +91,58 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+# CartItem model to save cart items
+class CartItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
 
+    def item_total(self):
+        return self.product.price * self.quantity
+
+    def __str__(self):
+        return f"{self.product.name} (x{self.quantity})"
+
+# Order model to save order details
+class Order(models.Model):
+    DELIVERY_METHOD_CHOICES = [
+        ('Home Delivery', 'Home Delivery (1-2 Days)'),
+        ('Express Delivery', 'Express Delivery (1-2 Hours)'),
+    ]
+
+    PAYMENT_METHOD_CHOICES = [
+        ('COD', 'Cash on Delivery'),
+        ('Online Payment', 'Online Payment (bKash, Nagad, Credit/Debit Card)'),
+    ]
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Confirmed', 'Confirmed'),
+        ('Shipped', 'Shipped'),
+        ('Delivered', 'Delivered'),
+        ('Canceled', 'Canceled'),
+        ('Refunded', 'Refunded'),
+    ]
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=15)
+    delivery_method = models.CharField(max_length=20, choices=DELIVERY_METHOD_CHOICES, default='Home Delivery')
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES, default='COD')
+    delivery_fee = models.DecimalField(max_digits=10, decimal_places=2)
+    discount = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+
+    def __str__(self):
+        return f"Order #{self.id} by {self.user.username}"
+
+# OrderItem model to save order item details
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    item_total = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.product.name} x{self.quantity} in Order #{self.order.id}"
