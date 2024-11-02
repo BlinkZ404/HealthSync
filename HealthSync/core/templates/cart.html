@@ -4,6 +4,7 @@
 <div class="container py-5">
     <h3 class="text-center mb-4">Your Shopping Cart</h3>
 
+    {% if cart_items %}
     <div class="row">
         <!-- Left Column for Cart Items -->
         <div class="col-md-8">
@@ -21,28 +22,35 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Example Cart Item -->
+                            {% for item in cart_items %}
                             <tr>
                                 <td class="text-center">
-                                    <img src="{% static 'img/medicine-1.jpg' %}" alt="Product Image" class="img-fluid rounded">
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-fluid rounded" style="width: 60px; height: 60px;">
                                 </td>
-                                <td>Paracetamol 500mg</td>
+                                <td>{{ item.product.name }}</td>
                                 <td class="text-center">
-                                    <input type="number" class="form-control form-control-sm text-center" value="2" min="1" style="width: 60px;">
+                                    <form action="{% url 'update_cart_item_quantity' item.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="number" name="quantity" class="form-control form-control-sm text-center" value="{{ item.quantity }}" min="1" style="width: 60px;" onchange="this.form.submit();">
+                                    </form>
                                 </td>
-                                <td class="text-end">৳ 100</td>
-                                <td class="text-end">৳ 200</td>
+                                <td class="text-end">৳ {{ item.product.price }}</td>
+                                <td class="text-end">৳ {{ item.item_total|floatformat:2 }}</td>
                                 <td class="text-center">
-                                    <button class="btn btn-sm btn-outline-danger"><i class="bx bx-trash"></i> Remove</button>
+                                    <form action="{% url 'remove_from_cart' item.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bx bx-trash"></i> Remove</button>
+                                    </form>
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
                 <div class="card-body d-flex justify-content-end">
                     <div>
-                        <p class="mb-2"><strong>Subtotal:</strong> <span class="text-muted">৳ 200</span></p>
-                        <h5><strong>Total:</strong> <span class="text-primary">৳ 200</span></h5>
+                        <p class="mb-2"><strong>Subtotal:</strong> <span class="text-muted">৳ {{ subtotal|floatformat:2 }}</span></p>
+                        <h5><strong>Total:</strong> <span class="text-primary">৳ {{ total|floatformat:2 }}</span></h5>
                     </div>
                 </div>
             </div>
@@ -54,10 +62,16 @@
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
                     <h5 class="text-center mb-3">Apply Discount Code</h5>
-                    <input type="text" class="form-control mb-2" placeholder="Promo / Coupon Code">
-                    <button class="btn btn-primary w-100 mb-3">Apply Coupon</button>
-                    <input type="text" class="form-control mb-2" placeholder="Gift Voucher Code">
-                    <button class="btn btn-primary w-100">Apply Voucher</button>
+                    <form action="{% url 'apply_discount_code' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="discount_code" class="form-control mb-2" placeholder="Promo / Coupon Code">
+                        <button type="submit" class="btn btn-primary w-100 mb-3">Apply Coupon</button>
+                    </form>
+                    <form action="{% url 'apply_gift_voucher' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="gift_voucher" class="form-control mb-2" placeholder="Gift Voucher Code">
+                        <button type="submit" class="btn btn-primary w-100">Apply Voucher</button>
+                    </form>
                 </div>
             </div>
 
@@ -68,6 +82,13 @@
             </div>
         </div>
     </div>
+    {% else %}
+    <div class="text-center py-5">
+        <h4 class="text-muted">Your cart is empty.</h4>
+        <p class="text-muted">Browse our products and add items to your cart.</p>
+        <a href="{% url 'medicine' %}" class="btn btn-primary mt-3"><i class="bx bx-left-arrow-alt"></i> Continue Shopping</a>
+    </div>
+    {% endif %}
 </div>
 
 <!-- Embedded CSS for styling -->
