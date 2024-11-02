@@ -47,3 +47,14 @@ class BloodDonor(models.Model):
     def __str__(self):
         return f"{self.name} - {self.blood_group} ({self.mobile_number})"
 
+class Doctor(models.Model):
+    name = models.CharField(max_length=100)
+    specialty = models.CharField(max_length=100)
+    experience = models.IntegerField(null=True)
+    hospital = models.CharField(max_length=100)
+    address = models.TextField()
+    photo = models.ImageField(upload_to='doctors/', default='doctors/default.jpg')
+    expertise = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name

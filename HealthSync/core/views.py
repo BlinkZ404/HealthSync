@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Address
 from .models import Donation
 from django.contrib.auth import logout
-from .models import BloodDonor
+from .models import BloodDonor, Doctor
 
 def home(request):
     # Render the home page
@@ -220,8 +220,6 @@ def medicine(request):
     return render(request, 'medicine.html')
 
 # Render the Doctors page
-def doctors(request):
-    return render(request, 'doctors.html')
 
 # Render the Donation page
 
@@ -250,3 +248,10 @@ def test(request):
     return render(request, 'test.html')
 
 
+def doctors(request):
+    doctors = Doctor.objects.all()
+
+    for doctor in doctors:
+        doctor.expertise_list = doctor.expertise.split(',')
+
+    return render(request, 'doctors.html', {'doctors': doctors})
