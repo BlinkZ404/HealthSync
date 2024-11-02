@@ -32,6 +32,7 @@ urlpatterns = [
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),  # Privacy policy page
     path('refund-policy/', views.refund_policy, name='refund_policy'),  # Refund policy page
     path('terms-conditions/', views.terms_conditions, name='terms_conditions'),  # Terms and conditions page
+    path('pharmacy-registration/', views.pharmacy_registration_view, name='pharmacy_registration'),
 
     # B2B registration route
     path('b2b-registration/', views.b2b_registration, name='b2b_registration'),  # Business-to-business registration

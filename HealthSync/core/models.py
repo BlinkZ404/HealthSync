@@ -146,3 +146,16 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.product.name} x{self.quantity} in Order #{self.order.id}"
+
+
+# Pharmacy model to save registered pharmacies
+class PharmacyRegistration(models.Model):
+    full_name = models.CharField(max_length=255)
+    mobile_number = models.CharField(max_length=15)
+    pharmacy_name = models.CharField(max_length=255)
+    license_number = models.CharField(max_length=50)
+    license_upload = models.FileField(upload_to='license_uploads/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.pharmacy_name} - {self.full_name}"

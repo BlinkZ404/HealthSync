@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Donation
 from django.contrib.auth import logout
-from .models import BloodDonor, Product, Manufacturer, CartItem, Order, OrderItem
+from .models import BloodDonor, Product, Manufacturer, CartItem, Order, OrderItem, PharmacyRegistration
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import redirect
@@ -439,3 +439,32 @@ def order_confirmation(request, order_id):
     # If the user is authorized, display the order confirmation page
     return render(request, 'order_confirmation.html', {'order': order})
 
+
+def pharmacy_registration_view(request):
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name')
+        mobile_number = request.POST.get('mobile_number')
+        pharmacy_name = request.POST.get('pharmacy_name')
+        license_number = request.POST.get('license_number')
+        license_upload = request.FILES.get('license_upload')
+
+        if license_upload:
+            if license_upload.size > 50 * 1024 * 1024:
+                messages.error(request, 'File size exceeds 50 MB. Please upload a smaller file.')
+                return redirect('pharmacy_registration')
+            if not license_upload.name.endswith(('.pdf', '.jpg', '.jpeg')):
+                messages.error(request, 'Unsupported file format. Please upload a PDF, JPG, or JPEG file.')
+                return redirect('pharmacy_registration')
+
+        PharmacyRegistration.objects.create(
+            full_name=full_name,
+            mobile_number=mobile_number,
+            pharmacy_name=pharmacy_name,
+            license_number=license_number,
+            license_upload=license_upload
+        )
+
+        messages.success(request, 'Your information has been received. We will contact you soon.')
+        return redirect('pharmacy_registration')
+
+    return render(request, 'b2b_registration.html')

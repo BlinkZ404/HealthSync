@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import (
     Profile, Donation, BloodDonor, Product,
-    Manufacturer, CartItem, Order, OrderItem
+    Manufacturer, Order, OrderItem, PharmacyRegistration
 )
 
 
@@ -64,14 +64,6 @@ class ManufacturerAdmin(admin.ModelAdmin):
     ordering = ('name',)
 
 
-# CartItem Admin Configuration
-@admin.register(CartItem)
-class CartItemAdmin(admin.ModelAdmin):
-    list_display = ('user', 'product', 'quantity', 'item_total')
-    search_fields = ('user__username', 'product__name')
-    list_filter = ('product',)
-    readonly_fields = ('item_total',)
-
 
 # Inline OrderItem Display within Order
 class OrderItemInline(admin.TabularInline):
@@ -99,3 +91,10 @@ class OrderItemAdmin(admin.ModelAdmin):
     search_fields = ('product__name', 'order__id')
     list_filter = ('product',)
     ordering = ('order',)
+
+
+@admin.register(PharmacyRegistration)
+class PharmacyRegistrationAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'mobile_number', 'pharmacy_name', 'license_number','license_upload',  'created_at')
+    search_fields = ('full_name', 'pharmacy_name', 'mobile_number', 'license_number')
+    list_filter = ('created_at',)

@@ -32,27 +32,28 @@
         <!-- Right Side Registration Form -->
         <div class="col-md-5 bg-white p-4" style="border-radius: 8px;">
             <h3 class="mb-4 text-dark text-center">Pharmacy Registration</h3>
-            <form>
+            <form method="POST" enctype="multipart/form-data" action="{% url 'pharmacy_registration' %}">
+                {% csrf_token %}
                 <div class="mb-3">
                     <label for="fullName" class="form-label">Full Name <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" required>
+                    <input type="text" class="form-control" id="fullName" name="full_name" placeholder="Enter your full name" required>
                 </div>
                 <div class="mb-3">
                     <label for="mobileNumber" class="form-label">Mobile Number <span class="text-danger">*</span></label>
-                    <input type="tel" class="form-control" id="mobileNumber" placeholder="+8801234567890" required>
+                    <input type="tel" class="form-control" id="mobileNumber" name="mobile_number" placeholder="+8801234567890" required>
                 </div>
                 <div class="mb-3">
                     <label for="pharmacyName" class="form-label">Pharmacy Name <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="pharmacyName" placeholder="Enter your pharmacy name" required>
+                    <input type="text" class="form-control" id="pharmacyName" name="pharmacy_name" placeholder="Enter your pharmacy name" required>
                 </div>
                 <div class="mb-3">
                     <label for="licenseNumber" class="form-label">Drug License Number <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="licenseNumber" placeholder="Enter your drug license number" required>
+                    <input type="text" class="form-control" id="licenseNumber" name="license_number" placeholder="Enter your drug license number" required>
                 </div>
                 <div class="mb-3">
-                    <label for="licenseUpload" class="form-label">Upload Drug License <span class="text-danger">*</span> (PDF or JPEG)</label>
-                    <input type="file" class="form-control" id="licenseUpload" accept=".pdf, .jpg, .jpeg" required>
-                    <small class="text-muted">Max size 2 MB</small>
+                    <label for="licenseUpload" class="form-label">Upload Drug License <span class="text-danger">*</span> (PDF, JPG or JPEG)</label>
+                    <input type="file" class="form-control" id="licenseUpload" name="license_upload" accept=".pdf, .jpg, .jpeg" required>
+                    <small class="text-muted">Max size 50 MB</small>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Register</button>
             </form>
