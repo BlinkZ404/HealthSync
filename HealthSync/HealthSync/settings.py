@@ -138,3 +138,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Redirect URL after logout
 LOGOUT_REDIRECT_URL = 'login'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_PORT = 2525  # You can also try 25, 465, or 587 if needed
+EMAIL_HOST_USER = '61eb56a914b7eb'
+EMAIL_HOST_PASSWORD = '41d1ab55876a88'
+EMAIL_USE_TLS = True  # Mailtrap supports STARTTLS on all ports
+DEFAULT_FROM_EMAIL = 'noreply@healthsync.com'  # Updated to use healthsync.com domain
+
+TIME_ZONE = 'Asia/Dhaka'
+USE_TZ = True

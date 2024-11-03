@@ -2,7 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.conf import settings
+from django.utils import timezone
 from decimal import Decimal
+from datetime import timedelta
+
 
 # Profile model to extend the User model with additional attributes
 class Profile(models.Model):
@@ -159,3 +162,12 @@ class PharmacyRegistration(models.Model):
 
     def __str__(self):
         return f"{self.pharmacy_name} - {self.full_name}"
+
+
+class OTP(models.Model):
+    email = models.EmailField()  # Add this line to store the email address
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_valid(self):
+        return timezone.now() < self.created_at + timedelta(minutes=5)

@@ -11,12 +11,8 @@ urlpatterns = [
     path('', views.home, name='home'),  # Main home page
 
     # Authentication-related routes
-    path('login/', views.login_view, name='login'),  # Login page for users
-    path('register/', views.register_view, name='register'),  # Registration page for new users
-    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),  # Password reset page
-    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),  # Confirmation of password reset request
-    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),  # Password reset confirmation page
-    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),  # Password reset completion page
+    path('login/', views.request_otp_view, name='login'),
+    path('verify-otp/', views.verify_otp_view, name='register'),
 
     # Custom logout route
     path('logout/', views.custom_logout, name='logout'),  # Custom logout action to log out users

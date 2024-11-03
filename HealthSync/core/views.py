@@ -7,6 +7,10 @@ from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect, JsonResponse
 from django.db import transaction
 from decimal import Decimal
+import random
+from django.core.mail import send_mail
+from .models import OTP
+import json
 
 from .models import (
     Profile, Donation, BloodDonor, Product, Manufacturer,
@@ -18,60 +22,93 @@ def home(request):
     # Render the home page
     return render(request, 'home.html')
 
-# Handle user registration
-def register_view(request):
-    # Redirect authenticated users to home page
-    if request.user.is_authenticated:
-        return redirect('home')
 
+def request_otp_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':  # AJAX request for resending OTP
+            data = json.loads(request.body)
+            email = data.get('email')
+
+            if email:
+                OTP.objects.filter(email=email).delete()  # Clear any existing OTPs for the email
+
+                otp_code = random.randint(100000, 999999)  # Generate a new OTP
+                OTP.objects.create(email=email, code=str(otp_code))
+
+                try:
+                    send_mail(
+                        'Your HealthSync Login OTP',
+                        f'Your OTP is: {otp_code}',
+                        'noreply@healthsync.com',
+                        [email],
+                        fail_silently=False,
+                    )
+                    messages.success(request, 'A new OTP has been sent to your email.')
+                    return JsonResponse({'success': True})
+                except Exception:
+                    messages.error(request, 'There was an error sending the OTP. Please try again later.')
+                    return JsonResponse({'success': False})
+            else:
+                messages.error(request, 'Please provide a valid email address.')
+                return JsonResponse({'success': False})
+
+        # Non-AJAX POST request for initial OTP request
         email = request.POST.get('email')
-        password = request.POST.get('password')
+        if email:
+            OTP.objects.filter(email=email).delete()  # Clear any existing OTPs
+            otp_code = random.randint(100000, 999999)
+            OTP.objects.create(email=email, code=str(otp_code))
 
-        # Validate password criteria
-        if len(password) < 8 or not any(c.islower() for c in password) or not any(c.isupper() for c in password) or not any(c.isdigit() for c in password):
-            messages.error(request, "Password must be at least 8 characters and include uppercase, lowercase, and a digit.")
-        elif User.objects.filter(username=username).exists():
-            messages.error(request, "Username is already taken.")
-        elif User.objects.filter(email=email).exists():
-            messages.error(request, "Email is already registered.")
-        else:
-            # Create a new user and log them in
-            user = User.objects.create_user(username=username, email=email, password=password)
-            user.save()
-            login(request, user)
-            return redirect('home')
+            try:
+                send_mail(
+                    'Your HealthSync Login OTP',
+                    f'Your OTP is: {otp_code}',
+                    'noreply@healthsync.com',
+                    [email],
+                    fail_silently=False,
+                )
+                request.session['email'] = email
+                messages.success(request, 'Your OTP has been sent to your email.')
+                return HttpResponseRedirect('/verify-otp/')  # Directly using URL path for redirection
+            except Exception:
+                messages.error(request, 'Failed to send OTP. Please try again later.')
+                return render(request, 'request_otp.html')
 
-    return render(request, 'register.html')
+        messages.error(request, 'Please enter a valid email address.')
+        return render(request, 'request_otp.html')
 
+    return render(request, 'request_otp.html')
 
-# Handle user login
-def login_view(request):
-    # Redirect authenticated users to home page
-    if request.user.is_authenticated:
-        return redirect('home')
-
+# Step 2: OTP Verification View
+def verify_otp_view(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        email = request.session.get('email')
+        input_otp = request.POST.get('otp')
 
-        # Use email to retrieve username
         try:
-            username = User.objects.get(email=email).username
-        except User.DoesNotExist:
-            messages.error(request, "Invalid email or password.")
-            return render(request, 'login.html')
+            otp_instance = OTP.objects.filter(email=email, code=input_otp).latest('created_at')
 
-        # Authenticate the user
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('home')
-        else:
-            messages.error(request, "Invalid email or password.")
+            # Check if the OTP is valid
+            if otp_instance and otp_instance.is_valid():
+                # Get or create user after successful OTP verification
+                user, created = User.objects.get_or_create(username=email, email=email)
+                login(request, user)
 
-    return render(request, 'login.html')
+                # Clean up session and delete OTP after successful login
+                otp_instance.delete()  # Delete the OTP after use
+                del request.session['email']  # Clear the email from session
+
+                return redirect('home')
+            else:
+                messages.error(request, "Invalid or expired OTP.")
+        except OTP.DoesNotExist:
+            messages.error(request, "Invalid email or OTP.")
+
+        return render(request, 'verify_otp.html')
+
+    return render(request, 'verify_otp.html')
+
+
 
 @login_required(login_url='login')
 def user_profile(request):
