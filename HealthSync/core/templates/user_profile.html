@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mt-5">
     <div class="row">
-        <!-- Sidebar with Boxed Style -->
+        <!-- Sidebar -->
         <div class="col-md-3">
             <!-- Profile Picture Box -->
             <div class="card bg-light text-dark shadow-sm mb-3">
@@ -21,7 +21,7 @@
                 </div>
             </div>
 
-            <!-- Profile Options Section (Boxed) -->
+            <!-- Profile Options Section -->
             <div class="card shadow-sm mb-3">
                 <div class="card-header text-center font-weight-bold" style="background-color: #f8f9fa; font-size: 1.1rem;">
                     Account Options
@@ -42,7 +42,7 @@
                 </div>
             </div>
 
-            <!-- Legal & Support Section (Boxed) -->
+            <!-- Legal & Support Section -->
             <div class="card shadow-sm">
                 <div class="card-header text-center font-weight-bold" style="background-color: #f8f9fa; font-size: 1.1rem;">
                     Legal & Support
@@ -74,10 +74,6 @@
                 <h5>Personal Information</h5>
                 <form method="POST" action="{% url 'update_profile' %}" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="username" name="username" value="{{ request.user.username }}" required>
-                    </div>
                     <div class="mb-3">
                         <label for="emailAddress" class="form-label">Email Address <span class="text-danger">*</span></label>
                         <input type="email" class="form-control" id="emailAddress" name="email" value="{{ request.user.email }}" required>
@@ -294,6 +290,7 @@
 
 
 <script>
+    // Function to preview the selected profile picture image before uploading
     function previewProfilePicture(event) {
         const reader = new FileReader();
         reader.onload = function(){
@@ -303,6 +300,7 @@
         reader.readAsDataURL(event.target.files[0]);
     }
 
+    // Function to show the specified profile section and hide others
     function showSection(sectionId) {
         document.querySelectorAll('.profile-section').forEach(section => {
             section.classList.add('d-none');
@@ -343,12 +341,9 @@
         border: none;
         font-size: 0.95rem;
     }
-    }
     .table th, .table td {
         vertical-align: middle !important;
         height: 60px;
-    }
-
     }
     .bg-custom-purple {
         background-color: #6f42c1;
@@ -358,11 +353,9 @@
         background-color: #007bff;
         color: white;
     }
-
     .modal-title {
         font-weight: bold;
     }
-
     .table-bordered {
         border: 1px solid #e0e0e0;
     }
@@ -373,7 +366,6 @@
         font-weight: 600;
         color: #4fa3db;
     }
-
     .btn-primary {
         transition: all 0.3s ease;
     }

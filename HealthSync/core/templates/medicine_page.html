@@ -23,7 +23,7 @@
                 <!-- Short Description -->
                 <p class="text-muted mb-3">{{ product.short_description }}</p>
 
-                <!-- Product Information Fields with moderate spacing -->
+                <!-- Product Information Fields -->
                 <p class="mb-2"><strong>Form:</strong> {{ product.form }}</p>
                 <p class="mb-2"><strong>Pack Size:</strong> {{ product.pack_size }}</p>
                 <p class="mb-2"><strong>Manufacturer:</strong> {{ product.manufacturer }}</p>
@@ -37,6 +37,7 @@
             </div>
 
             <!-- Quantity Selector and Add to Cart Button -->
+            {% if product.availability == 'In Stock' %}
             <form method="post" action="{% url 'add_to_cart' product.id %}">
                 {% csrf_token %}
                 <div class="d-flex align-items-center mb-3">
@@ -45,6 +46,13 @@
                 </div>
                 <button type="submit" class="btn btn-primary btn-lg" style="width: 200px;">Add to Cart</button>
             </form>
+            {% else %}
+            <div class="d-flex justify-content-center align-items-center mb-2">
+                <span class="badge bg-danger text-white px-4 py-3" style="font-size: 1rem; font-weight: bold; border-radius: 5px; width: 200px; text-align: center; margin-right: 500px;">
+                    SOLD OUT
+                </span>
+            </div>
+            {% endif %}
         </div>
     </div>
 

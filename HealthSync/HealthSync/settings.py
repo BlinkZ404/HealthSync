@@ -107,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dhaka'
 
 USE_I18N = True
 
@@ -120,7 +120,7 @@ STATIC_URL = '/static/'
 # Sets default primary key field type for models
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Directory where Django will collect all static files for deployment
+# Directory where Django will collect all static files for deployment (used during production)
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Additional locations of static files (for development)
@@ -133,8 +133,64 @@ import os  # Importing os module for path manipulations
 # URL to access media files, should end with a slash
 MEDIA_URL = '/media/'
 
-# Directory for uploaded media files
+# Directory for uploaded media files (e.g., user uploads, profile pictures)
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Redirect URL after logout
-LOGOUT_REDIRECT_URL = 'login'
+# URL to redirect to after a user logs out
+LOGOUT_REDIRECT_URL = 'request_otp'
+
+# Email configuration for sending emails via SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Specifies SMTP as the email backend
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'  # Host for the SMTP server
+EMAIL_PORT = 2525  # Port for the SMTP server
+EMAIL_HOST_USER = '61eb56a914b7eb'  # Username for the SMTP server
+EMAIL_HOST_PASSWORD = '41d1ab55876a88'  # Password for the SMTP server
+EMAIL_USE_TLS = True  # Enables TLS encryption for email transmission
+DEFAULT_FROM_EMAIL = 'noreply@healthsync.com'  # Default "From" email address for outgoing emails
+
+
+JAZZMIN_SETTINGS = {
+    "site_header": "HealthSync Admin Panel",
+    "site_brand": "Admin",
+    "site_logo": "img/Healthsync-B.png",
+    "site_logo_classes": "img-square rounded",
+    "welcome_sign": "Welcome to HealthSync Admin Panel!",
+    "site_footer": "HealthSync © 2024",
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "order_with_respect_to": ["core.Profile", "core.Order", "core.OrderItem", "core.Donation", "core.Product", "core.Manufacturer","core.BloodDonor", "core.PharmacyRegistration"],
+
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.group": "fas fa-user-shield",
+        "core.BloodDonor": "fas fa-hand-holding-medical",
+        "core.Donation": "fas fa-heartbeat",
+        "core.Manufacturer": "fas fa-industry",
+        "core.Order": "fas fa-shopping-cart",
+        "core.OrderItem": "fas fa-box-open",
+        "core.PharmacyRegistration": "fas fa-hospital-user",
+        "core.Product": "fas fa-pills",
+        "core.Profile": "fas fa-id-card",
+
+
+    },
+
+    "topmenu_links": [
+        {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"app": "core"},
+    ],
+
+    "usermenu_links": [
+        {"name": "Home", "url": "/", "new_window": True, "icon": "fas fa-home"},
+        {"name": "Doctors", "url": "/doctors/", "new_window": True, "icon": "fas fa-user-md"},
+        {"name": "Medicine", "url": "/medicine/", "new_window": True, "icon": "fas fa-pills"},
+        {"name": "Donors", "url": "/blood-donors/", "new_window": True, "icon": "fas fa-hand-holding-medical"},
+
+    ],
+
+    "changeform_format": "collapsible",
+    "changeform_format_overrides": {
+        "auth.user": "horizontal_tabs",
+    },
+}

@@ -1,102 +1,132 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect, JsonResponse
-from django.db import transaction
 from decimal import Decimal
+import random
+from django.core.mail import send_mail
+import json
 
 from .models import (
     Profile, Donation, BloodDonor, Product, Manufacturer,
-    CartItem, Order, OrderItem, PharmacyRegistration
+    CartItem, Order, OrderItem, PharmacyRegistration, OTP
 )
-from django.db.models import Q
 
+# Render the home page
 def home(request):
-    # Render the home page
     return render(request, 'home.html')
 
-# Handle user registration
-def register_view(request):
-    # Redirect authenticated users to home page
-    if request.user.is_authenticated:
-        return redirect('home')
 
+# Handle OTP request for registration/login
+def request_otp_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
+        # Handle AJAX request for resending OTP
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            data = json.loads(request.body)
+            email = data.get('email')
+
+            if email:
+                # Delete existing OTPs and create a new one
+                OTP.objects.filter(email=email).delete()
+                otp_code = random.randint(100000, 999999)
+                OTP.objects.create(email=email, code=str(otp_code))
+
+                # Send OTP email
+                try:
+                    send_mail(
+                        'Your HealthSync Login OTP',
+                        f'Your OTP is: {otp_code}',
+                        'noreply@healthsync.com',
+                        [email],
+                        fail_silently=False,
+                    )
+                    messages.success(request, 'A new OTP has been sent to your email.')
+                    return JsonResponse({'success': True})
+                except Exception:
+                    messages.error(request, 'There was an error sending the OTP. Please try again later.')
+                    return JsonResponse({'success': False})
+            else:
+                messages.error(request, 'Please provide a valid email address.')
+                return JsonResponse({'success': False})
+
+        # Non-AJAX POST request handling for initial OTP request
         email = request.POST.get('email')
-        password = request.POST.get('password')
+        if email:
+            OTP.objects.filter(email=email).delete()
+            otp_code = random.randint(100000, 999999)
+            OTP.objects.create(email=email, code=str(otp_code))
 
-        # Validate password criteria
-        if len(password) < 8 or not any(c.islower() for c in password) or not any(c.isupper() for c in password) or not any(c.isdigit() for c in password):
-            messages.error(request, "Password must be at least 8 characters and include uppercase, lowercase, and a digit.")
-        elif User.objects.filter(username=username).exists():
-            messages.error(request, "Username is already taken.")
-        elif User.objects.filter(email=email).exists():
-            messages.error(request, "Email is already registered.")
-        else:
-            # Create a new user and log them in
-            user = User.objects.create_user(username=username, email=email, password=password)
-            user.save()
-            login(request, user)
-            return redirect('home')
+            try:
+                send_mail(
+                    'Your HealthSync Login OTP',
+                    f'Your OTP is: {otp_code}',
+                    'noreply@healthsync.com',
+                    [email],
+                    fail_silently=False,
+                )
+                request.session['email'] = email
+                messages.success(request, 'Your OTP has been sent to your email.')
+                return HttpResponseRedirect('/verify-otp/')
+            except Exception:
+                messages.error(request, 'Failed to send OTP. Please try again later.')
+                return render(request, 'request_otp.html')
 
-    return render(request, 'register.html')
+        messages.error(request, 'Please enter a valid email address.')
+        return render(request, 'request_otp.html')
+
+    return render(request, 'request_otp.html')
 
 
-# Handle user login
-def login_view(request):
-    # Redirect authenticated users to home page
-    if request.user.is_authenticated:
-        return redirect('home')
-
+# Handle OTP verification
+def verify_otp_view(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        email = request.session.get('email')
+        input_otp = request.POST.get('otp')
 
-        # Use email to retrieve username
         try:
-            username = User.objects.get(email=email).username
-        except User.DoesNotExist:
-            messages.error(request, "Invalid email or password.")
-            return render(request, 'login.html')
+            otp_instance = OTP.objects.filter(email=email, code=input_otp).latest('created_at')
 
-        # Authenticate the user
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('home')
-        else:
-            messages.error(request, "Invalid email or password.")
+            # Validate OTP and log in user
+            if otp_instance and otp_instance.is_valid():
+                user, created = User.objects.get_or_create(username=email, email=email)
+                login(request, user)
 
-    return render(request, 'login.html')
+                otp_instance.delete()
+                del request.session['email']
+                return redirect('home')
+            else:
+                messages.error(request, "Invalid or expired OTP.")
+        except OTP.DoesNotExist:
+            messages.error(request, "Invalid email or OTP.")
 
-@login_required(login_url='login')
+        return render(request, 'verify_otp.html')
+
+    return render(request, 'verify_otp.html')
+
+
+# Display user profile
+@login_required(login_url='request_otp')
 def user_profile(request):
-    # Get or create the profile associated with the user
     profile, created = Profile.objects.get_or_create(user=request.user)
-
-    # Fetch all orders for the logged-in user
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     donations = Donation.objects.filter(user=request.user).order_by('-donation_date')
 
-    # Pass user, profile, and order data to the template
     context = {
         'user': request.user,
         'profile': profile,
         'orders': orders,
         'donations': donations,
     }
-
     return render(request, 'user_profile.html', context)
 
-# Handle profile updates
-@login_required(login_url='login')
+
+# Update user profile information
+@login_required(login_url='request_otp')
 def update_profile(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
         email = request.POST.get('email')
         full_name = request.POST.get('full_name')
         mobile_number = request.POST.get('mobile_number')
@@ -105,15 +135,14 @@ def update_profile(request):
         profile_picture = request.FILES.get('profile_picture')
 
         try:
-            # Update User model fields
+            # Update user model fields
             user = request.user
-            user.username = username
             user.email = email
             user.first_name = full_name.split(" ")[0] if full_name else ""
             user.last_name = " ".join(full_name.split(" ")[1:]) if full_name else ""
             user.save()
 
-            # Update Profile model fields if applicable
+            # Update profile model fields
             profile, created = Profile.objects.get_or_create(user=user)
             profile.mobile_number = mobile_number
             profile.gender = gender
@@ -132,8 +161,7 @@ def update_profile(request):
     return redirect('user_profile')
 
 
-
-# Add a donation entry for the authenticated user
+# Add a donation entry
 @login_required
 def add_donation(request):
     if request.method == 'POST':
@@ -142,7 +170,6 @@ def add_donation(request):
         receiver_name = request.POST.get('receiver_name')
         receiver_number = request.POST.get('receiver_number')
 
-        # Save the donation data
         Donation.objects.create(
             user=request.user,
             donation_date=donation_date,
@@ -152,30 +179,28 @@ def add_donation(request):
         )
 
         messages.success(request, "Donation history added successfully.")
-        return redirect('user_profile')  # Redirect back to profile page
+        return redirect('user_profile')
 
     return redirect('user_profile')
 
-# Delete a donation entry for the authenticated user
+
+# Delete a donation entry
 @login_required
 def delete_donation(request, donation_id):
-    # Get the donation object or return a 404 if it doesn't exist
     donation = get_object_or_404(Donation, id=donation_id, user=request.user)
-
     donation.delete()
     messages.success(request, "Donation record deleted successfully.")
-
     return redirect('user_profile')
 
 
-# Logout the user and redirect to the login page
+# Logout the user
 def custom_logout(request):
     logout(request)
     messages.success(request, "You have been logged out successfully.")
-    return redirect('login')
+    return redirect('request_otp')
 
 
-# Add a donor info on donation page
+# Register a new blood donor
 def add_donor(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -184,7 +209,6 @@ def add_donor(request):
         division = request.POST.get('division')
         district = request.POST.get('district')
 
-        # Save the donor information
         BloodDonor.objects.create(
             name=name,
             mobile_number=mobile_number,
@@ -197,89 +221,47 @@ def add_donor(request):
 
     return redirect('donors')
 
-# Render the Donation page
+
+# View all registered donors
 def donor_view(request):
     donors = BloodDonor.objects.all()
     return render(request, 'donation.html', {'donors': donors})
 
 
-# Render the About Us page
-def about(request):
-    return render(request, 'about.html')
-
-# Render the FAQ page
-def faq(request):
-    return render(request, 'faq.html')
-
-# Render the Privacy Policy page
-def privacy_policy(request):
-    return render(request, 'privacy.html')
-
-# Render the Refund Policy page
-def refund_policy(request):
-    return render(request, 'refund_policy.html')
-
-# Render the Terms and Conditions page
-def terms_conditions(request):
-    return render(request, 'terms.html')
-
-# Render the B2B Registration page
-def b2b_registration(request):
-    return render(request, 'b2b_registration.html')
-
-# Render the Medicine page
-def medicine(request):
-    return render(request, 'medicine.html')
-
-def medicine_page(request):
-    return render(request, 'medicine_page.html')
-
-# Render the Doctors page
-def doctors(request):
-    return render(request, 'doctors.html')
-
-# Render the Donation page
-
-# Render the Disease Prediction page
-def disease_prediction(request):
-    return render(request, 'disease_prediction.html')
-
-# Render the Appointment page
-def appointment(request):
-    return render(request, 'doctors.html')
-
-# Render the Cart page
-def cart(request):
-    return render(request, 'cart.html')
-
-# Render the Checkout page
-def checkout(request):
-    return render(request, 'checkout.html')
-
-# Render a custom 404 error page
-def error_404(request, exception):
-    return render(request, '404.html', status=404)
-
-# Render the Test page
-def test(request):
-    return render(request, 'test.html')
+# Static pages
+def about(request): return render(request, 'about.html')
+def faq(request): return render(request, 'faq.html')
+def privacy_policy(request): return render(request, 'privacy.html')
+def refund_policy(request): return render(request, 'refund_policy.html')
+def terms_conditions(request): return render(request, 'terms.html')
+def b2b_registration(request): return render(request, 'b2b_registration.html')
+def medicine(request): return render(request, 'medicine.html')
+def doctors(request): return render(request, 'doctors.html')
+def disease_prediction(request): return render(request, 'disease_prediction.html')
+def appointment(request): return render(request, 'doctors.html')
+def cart(request): return render(request, 'cart.html')
+def checkout(request): return render(request, 'checkout.html')
+def error_404(request, exception): return render(request, '404.html', status=404)
+def test(request): return render(request, 'test.html')
 
 
+# View for displaying a single product's details
 def medicine_page(request, sku):
     product = get_object_or_404(Product, sku=sku)
     return render(request, 'medicine_page.html', {'product': product})
 
+
+# Filter and sort products
 def medicine(request):
     products = Product.objects.all()
-
-    # Apply sorting
     sort_order = request.GET.get('sort')
     if sort_order == 'asc':
         products = products.order_by('price')
     elif sort_order == 'desc':
         products = products.order_by('-price')
+    else:
+        products = products.order_by('id')
 
-    # Apply filtering based on request parameters
     availability = request.GET.getlist('availability')
     if availability:
         products = products.filter(availability__in=availability)
@@ -292,7 +274,6 @@ def medicine(request):
     if form:
         products = products.filter(form__in=form)
 
-    # Paginate the filtered and sorted queryset
     paginator = Paginator(products, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -310,7 +291,7 @@ def medicine(request):
     return render(request, 'medicine.html', context)
 
 
-
+# Apply discount code to cart
 def apply_discount_code(request):
     if request.method == 'POST':
         discount_code = request.POST.get('discount_code', '')
@@ -318,7 +299,7 @@ def apply_discount_code(request):
     return HttpResponseRedirect('/')
 
 
-
+# Apply gift voucher to cart
 def apply_gift_voucher(request):
     if request.method == 'POST':
         gift_voucher = request.POST.get('gift_voucher', '')
@@ -326,9 +307,8 @@ def apply_gift_voucher(request):
     return HttpResponseRedirect('/')
 
 
-
-
-@login_required(login_url='/login/')
+# Add item to cart
+@login_required(login_url='request_otp')
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     quantity = int(request.POST.get('quantity', 1))
@@ -344,12 +324,12 @@ def add_to_cart(request, product_id):
     return redirect('view_cart')
 
 
-
-@login_required(login_url='login')
+# View all items in cart
+@login_required(login_url='request_otp')
 def view_cart(request):
     cart_items = CartItem.objects.filter(user=request.user)
     subtotal = sum(item.item_total() for item in cart_items)
-    total = subtotal  # Adjust with any additional fees if applicable
+    total = subtotal
 
     context = {
         'cart_items': cart_items,
@@ -359,8 +339,8 @@ def view_cart(request):
     return render(request, 'cart.html', context)
 
 
-
-@login_required(login_url='login')
+# Update item quantity in cart
+@login_required(login_url='request_otp')
 def update_cart_item_quantity(request, item_id):
     if request.method == 'POST':
         cart_item = get_object_or_404(CartItem, id=item_id, user=request.user)
@@ -374,8 +354,8 @@ def update_cart_item_quantity(request, item_id):
     return redirect('view_cart')
 
 
-
-@login_required(login_url='login')
+# Remove item from cart
+@login_required(login_url='request_otp')
 def remove_from_cart(request, item_id):
     cart_item = get_object_or_404(CartItem, id=item_id, user=request.user)
     cart_item.delete()
@@ -383,14 +363,14 @@ def remove_from_cart(request, item_id):
     return redirect('view_cart')
 
 
-
-@login_required(login_url='login')
+# Handle checkout process
+@login_required(login_url='request_otp')
 def checkout(request):
     cart_items = CartItem.objects.filter(user=request.user)
 
     if not cart_items.exists():
         messages.warning(request, "Your cart is empty. Please add items to proceed to checkout.")
-        return redirect('view_cart')  # Redirect to the cart page
+        return redirect('view_cart')
 
     if request.method == 'POST':
         full_name = request.POST.get("full_name")
@@ -400,10 +380,7 @@ def checkout(request):
         payment_method = request.POST.get('payment_method')
 
         subtotal = sum(item.item_total() for item in cart_items)
-        if delivery_method == 'Express Delivery':
-            delivery_fee = Decimal('100.00')
-        else:
-            delivery_fee = Decimal('50.00')
+        delivery_fee = Decimal('100.00') if delivery_method == 'Express Delivery' else Decimal('50.00')
         discount = Decimal('0.00')
         total_amount = subtotal + delivery_fee - discount
 
@@ -441,19 +418,19 @@ def checkout(request):
     return render(request, 'checkout.html', context)
 
 
-@login_required(login_url='login')  # Ensures the user is logged in
+# Display order confirmation
+@login_required(login_url='request_otp')
 def order_confirmation(request, order_id):
     order = get_object_or_404(Order, id=order_id)
 
-    # Check if the order belongs to the current logged-in user
     if order.user != request.user:
         messages.error(request, "You do not have permission to view this order.")
-        return redirect('home')  # Redirect to a suitable page, such as home
+        return redirect('home')
 
-    # If the user is authorized, display the order confirmation page
     return render(request, 'order_confirmation.html', {'order': order})
 
 
+# Handle pharmacy registration
 def pharmacy_registration_view(request):
     if request.method == 'POST':
         full_name = request.POST.get('full_name')
@@ -483,9 +460,11 @@ def pharmacy_registration_view(request):
 
     return render(request, 'b2b_registration.html')
 
+
+# Search for products based on user query
 def search_products(request):
     query = request.GET.get('query', '')
-    products = Product.objects.filter(name__icontains=query)[:5]  # Limit results to top 5
+    products = Product.objects.filter(name__icontains=query)[:5]
 
     results = [
         {
@@ -498,3 +477,5 @@ def search_products(request):
     ]
 
     return JsonResponse(results, safe=False)
+
+

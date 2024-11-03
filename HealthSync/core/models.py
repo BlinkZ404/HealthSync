@@ -1,8 +1,21 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
-from django.conf import settings
+from django.utils import timezone
 from decimal import Decimal
+from datetime import timedelta
+
+
+# OTP model to store One-Time Passwords for email verification
+class OTP(models.Model):
+    email = models.EmailField()
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # Check if the OTP is still valid (within 5 minutes)
+    def is_valid(self):
+        return timezone.now() < self.created_at + timedelta(minutes=5)
+
 
 # Profile model to extend the User model with additional attributes
 class Profile(models.Model):
@@ -40,6 +53,7 @@ class BloodDonor(models.Model):
     def __str__(self):
         return f"{self.name} - {self.blood_group} ({self.mobile_number})"
 
+
 # Manufacturer model to save manufacturer details
 class Manufacturer(models.Model):
     name = models.CharField(max_length=100)
@@ -49,8 +63,10 @@ class Manufacturer(models.Model):
     def __str__(self):
         return self.name
 
+
 # Product model to save product details
 class Product(models.Model):
+    # Availability choices
     IN_STOCK = 'In Stock'
     OUT_OF_STOCK = 'Out of Stock'
     AVAILABILITY_CHOICES = [
@@ -58,6 +74,7 @@ class Product(models.Model):
         (OUT_OF_STOCK, 'Out of Stock'),
     ]
 
+    # Form choices for the product (e.g., Tablet, Syrup)
     TABLET = 'Tablet'
     SYRUP = 'Syrup'
     INJECTION = 'Injection'
@@ -69,11 +86,11 @@ class Product(models.Model):
 
     name = models.CharField(max_length=200)
     sku = models.CharField(max_length=50, unique=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2, db_index=True,  validators=[MinValueValidator(0)])
+    price = models.DecimalField(max_digits=10, decimal_places=2, db_index=True, validators=[MinValueValidator(0)])
     original_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True,
                                          validators=[MinValueValidator(0)])
     short_description = models.TextField()
-    form = models.CharField(max_length=50, choices=FORM_CHOICES ,db_index=True)
+    form = models.CharField(max_length=50, choices=FORM_CHOICES, db_index=True)
     pack_size = models.CharField(max_length=50)
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, db_index=True)
     availability = models.CharField(max_length=20, choices=AVAILABILITY_CHOICES, db_index=True)
@@ -82,6 +99,7 @@ class Product(models.Model):
     warnings = models.TextField()
     image = models.ImageField(upload_to='product_images/')
 
+    # Calculate discount percentage based on original and current price
     def discount_percentage(self):
         if self.original_price and self.original_price > self.price:
             discount = ((self.original_price - self.price) / self.original_price) * 100
@@ -91,29 +109,36 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-# CartItem model to save cart items
+
+# CartItem model to save cart items for each user
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
+    # Calculate total cost for the item based on quantity and price
     def item_total(self):
         return self.product.price * self.quantity
 
     def __str__(self):
         return f"{self.product.name} (x{self.quantity})"
 
+
 # Order model to save order details
 class Order(models.Model):
+    # Delivery method choices for the order
     DELIVERY_METHOD_CHOICES = [
         ('Home Delivery', 'Home Delivery (1-2 Days)'),
         ('Express Delivery', 'Express Delivery (1-2 Hours)'),
     ]
 
+    # Payment method choices
     PAYMENT_METHOD_CHOICES = [
         ('COD', 'Cash on Delivery'),
         ('Online Payment', 'Online Payment (bKash, Nagad, Credit/Debit Card)'),
     ]
+
+    # Status choices for order processing
     STATUS_CHOICES = [
         ('Pending', 'Pending'),
         ('Confirmed', 'Confirmed'),
@@ -122,6 +147,7 @@ class Order(models.Model):
         ('Canceled', 'Canceled'),
         ('Refunded', 'Refunded'),
     ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
@@ -137,7 +163,8 @@ class Order(models.Model):
     def __str__(self):
         return f"Order #{self.id} by {self.user.username}"
 
-# OrderItem model to save order item details
+
+# OrderItem model to save details of each item in an order
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -148,7 +175,7 @@ class OrderItem(models.Model):
         return f"{self.product.name} x{self.quantity} in Order #{self.order.id}"
 
 
-# Pharmacy model to save registered pharmacies
+# PharmacyRegistration model to save details of registered pharmacies
 class PharmacyRegistration(models.Model):
     full_name = models.CharField(max_length=255)
     mobile_number = models.CharField(max_length=15)

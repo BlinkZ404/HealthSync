@@ -5,7 +5,6 @@ from .models import (
     Manufacturer, Order, OrderItem, PharmacyRegistration
 )
 
-
 # Profile Admin Configuration
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
@@ -23,7 +22,6 @@ class ProfileAdmin(admin.ModelAdmin):
         return obj.user.email
     email.short_description = 'Email'
 
-
 # Donation Admin Configuration
 @admin.register(Donation)
 class DonationAdmin(admin.ModelAdmin):
@@ -32,14 +30,12 @@ class DonationAdmin(admin.ModelAdmin):
     list_filter = ('donation_date',)
     ordering = ('-donation_date',)
 
-
 # Blood Donor Admin Configuration
 @admin.register(BloodDonor)
 class BloodDonorAdmin(admin.ModelAdmin):
     list_display = ('name', 'mobile_number', 'blood_group', 'division', 'district')
     search_fields = ('name', 'mobile_number', 'blood_group')
     list_filter = ('blood_group', 'division', 'district')
-
 
 # Product Admin Configuration
 @admin.register(Product)
@@ -55,7 +51,6 @@ class ProductAdmin(admin.ModelAdmin):
         return f"{obj.discount_percentage()}%"
     discount_percentage.short_description = 'Discount (%)'
 
-
 # Manufacturer Admin Configuration
 @admin.register(Manufacturer)
 class ManufacturerAdmin(admin.ModelAdmin):
@@ -63,26 +58,22 @@ class ManufacturerAdmin(admin.ModelAdmin):
     search_fields = ('name', 'phone_number')
     ordering = ('name',)
 
-
-
-# Inline OrderItem Display within Order
+# Inline display for order items in OrderAdmin
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
     readonly_fields = ('product', 'quantity', 'item_total')
     can_delete = False
 
-
 # Order Admin Configuration
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'status','total_amount', 'delivery_method', 'payment_method', 'created_at')
-    list_filter = ('status','delivery_method', 'payment_method', 'created_at')
+    list_display = ('id', 'user', 'status', 'total_amount', 'delivery_method', 'payment_method', 'created_at')
+    list_filter = ('status', 'delivery_method', 'payment_method', 'created_at')
     search_fields = ('user__username', 'address', 'phone_number', 'status')
     inlines = [OrderItemInline]
     ordering = ('-created_at',)
     readonly_fields = ('total_amount', 'delivery_fee', 'discount', 'created_at')
-
 
 # OrderItem Admin Configuration
 @admin.register(OrderItem)
@@ -92,10 +83,13 @@ class OrderItemAdmin(admin.ModelAdmin):
     list_filter = ('product',)
     ordering = ('order',)
 
-
-# Pharmacy Admin Configuration
+# Pharmacy Registration Admin Configuration
 @admin.register(PharmacyRegistration)
 class PharmacyRegistrationAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'mobile_number', 'pharmacy_name', 'license_number','license_upload',  'created_at')
+    list_display = ('full_name', 'mobile_number', 'pharmacy_name', 'license_number', 'license_upload', 'created_at')
     search_fields = ('full_name', 'pharmacy_name', 'mobile_number', 'license_number')
     list_filter = ('created_at',)
+
+admin.site.site_header = "HealthSync Admin Panel"
+admin.site.site_title = "HealthSync Admin Portal"
+admin.site.index_title = "HealthSync Admin Panel"

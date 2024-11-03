@@ -3,7 +3,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import handler404
 from . import views
-from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
@@ -11,12 +10,8 @@ urlpatterns = [
     path('', views.home, name='home'),  # Main home page
 
     # Authentication-related routes
-    path('login/', views.login_view, name='login'),  # Login page for users
-    path('register/', views.register_view, name='register'),  # Registration page for new users
-    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),  # Password reset page
-    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),  # Confirmation of password reset request
-    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),  # Password reset confirmation page
-    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),  # Password reset completion page
+    path('request-otp/', views.request_otp_view, name='request_otp'), # Route for requesting an OTP, triggers OTP generation and email
+    path('verify-otp/', views.verify_otp_view, name='verify_otp'), # Route for verifying the OTP entered by the user
 
     # Custom logout route
     path('logout/', views.custom_logout, name='logout'),  # Custom logout action to log out users
@@ -67,6 +62,6 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Custom 404 error handler route
-handler404 = 'core.views.error_404'  # Custom error handler for 404 page not found
+handler404 = 'core.views.error_404'
 
 

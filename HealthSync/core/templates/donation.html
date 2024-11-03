@@ -146,6 +146,7 @@
 </div>
 
 <script>
+    // Object containing divisions and their respective districts in Bangladesh
     const districts = {
         'Barishal': [
             'Bagerhat', 'Barishal', 'Bhola', 'Jhalokati', 'Patuakhali', 'Pirojpur'
@@ -173,6 +174,7 @@
         ]
     };
 
+    // Function to update district dropdown based on selected division
     function updateDistricts(mode) {
         const divisionSelect = document.getElementById(mode === 'search' ? 'searchDivision' : 'donorDivision');
         const districtSelect = document.getElementById(mode === 'search' ? 'searchDistrict' : 'donorDistrict');
@@ -192,6 +194,7 @@
         }
     }
 
+    // Function to filter donor cards based on selected filters
     function filterDonors() {
         const bloodGroup = document.getElementById('searchBloodGroup').value;
         const division = document.getElementById('searchDivision').value;

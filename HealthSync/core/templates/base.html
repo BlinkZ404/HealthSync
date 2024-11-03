@@ -105,44 +105,44 @@
             border-radius: 4px;
             object-fit: cover;
         }
-    footer {
-        background-color: #1c3b70;
-        color: #f0f0f0;
-    }
-    .footer-heading {
-        color: #f8c471;
-        font-weight: bold;
-        margin-bottom: 1rem;
-        font-size: 1.1rem;
-    }
-    .footer-links li, .footer-contact li {
-        margin-bottom: 10px;
-    }
-    .footer-links li a, .footer-contact li a {
-        color: #d1d8e0;
-        text-decoration: none;
-        transition: color 0.3s ease;
-    }
-    .footer-links li a:hover, .footer-contact li a:hover {
-        color: #f8c471;
-    }
-    .footer-contact i, .footer-heading i {
-        color: #f8c471;
-        margin-right: 8px;
-    }
-    .footer-contact li i {
-        margin-right: 6px;
-    }
+        footer {
+            background-color: #1c3b70;
+            color: #f0f0f0;
+        }
+        .footer-heading {
+            color: #f8c471;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        .footer-links li, .footer-contact li {
+            margin-bottom: 10px;
+        }
+        .footer-links li a, .footer-contact li a {
+            color: #d1d8e0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer-links li a:hover, .footer-contact li a:hover {
+            color: #f8c471;
+        }
+        .footer-contact i, .footer-heading i {
+            color: #f8c471;
+            margin-right: 8px;
+        }
+        .footer-contact li i {
+            margin-right: 6px;
+        }
     </style>
 
 </head>
 <body>
 
 <header>
-    <!-- Enhanced Toast Notification for Messages -->
+    <!-- Toast Notification for Messages -->
     {% if messages %}
         <div class="toast-container">
-            <div class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+            <div class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="7500">
                 <div class="toast-header">
                     <i class="bx bx-bell me-2" style="font-size: 1.5rem;"></i>
                     <strong class="me-auto">Notification</strong>
@@ -192,7 +192,7 @@
                     <li class="nav-item"><a class="nav-link text-white" href="{% url 'donors' %}">Blood Donation</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="{% url 'disease_prediction' %}">Disease Prediction</a></li>
                 </ul>
-                <!-- Search Bar with Real-time Results -->
+                <!-- Search Bar -->
                 <div class="position-relative me-3" style="width: 300px;">
                     <input class="form-control" type="search" placeholder="Search..." aria-label="Search" id="searchInput" oninput="fetchSearchResults(this.value)">
                     <div id="searchResults"></div>
@@ -214,7 +214,7 @@
                         </li>
                     {% else %}
                         <li class="nav-item ms-4">
-                            <a href="{% url 'login' %}" class="btn btn-primary" style="background-color: #4fa3db; color: white;">Login +</a>
+                            <a href="{% url 'request_otp' %}" class="btn btn-primary" style="background-color: #4fa3db; color: white;">Login +</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -284,6 +284,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+    // Event listener that runs once the DOM content has fully loaded
     document.addEventListener("DOMContentLoaded", function () {
         {% if messages %}
             const toastEl = document.querySelector('.toast');
@@ -292,6 +293,7 @@
         {% endif %}
     });
 
+    // Function to fetch and display search results based on user input
     function fetchSearchResults(query) {
         const searchResults = document.getElementById('searchResults');
         if (!query) {
