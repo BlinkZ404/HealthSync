@@ -93,6 +93,7 @@ class OrderItemAdmin(admin.ModelAdmin):
     ordering = ('order',)
 
 
+# Pharmacy Admin Configuration
 @admin.register(PharmacyRegistration)
 class PharmacyRegistrationAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'mobile_number', 'pharmacy_name', 'license_number','license_upload',  'created_at')

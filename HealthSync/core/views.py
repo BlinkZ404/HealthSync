@@ -1,19 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.contrib.auth import login
-from .models import Profile
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Donation
-from django.contrib.auth import logout
-from .models import BloodDonor, Product, Manufacturer, CartItem, Order, OrderItem, PharmacyRegistration
 from django.core.paginator import Paginator
-from django.db.models import Q
-from django.shortcuts import redirect
 from django.http import HttpResponseRedirect, JsonResponse
-from decimal import Decimal
 from django.db import transaction
+from decimal import Decimal
+
+from .models import (
+    Profile, Donation, BloodDonor, Product, Manufacturer,
+    CartItem, Order, OrderItem, PharmacyRegistration
+)
+from django.db.models import Q
 
 def home(request):
     # Render the home page
@@ -74,7 +73,7 @@ def login_view(request):
 
     return render(request, 'login.html')
 
-@login_required
+@login_required(login_url='login')
 def user_profile(request):
     # Get or create the profile associated with the user
     profile, created = Profile.objects.get_or_create(user=request.user)
@@ -92,7 +91,7 @@ def user_profile(request):
     return render(request, 'user_profile.html', context)
 
 # Handle profile updates
-@login_required
+@login_required(login_url='login')
 def update_profile(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -133,6 +132,7 @@ def update_profile(request):
 
 
 # Add a donation entry for the authenticated user
+@login_required
 def add_donation(request):
     if request.method == 'POST':
         donation_date = request.POST.get('donation_date')
@@ -155,6 +155,7 @@ def add_donation(request):
     return redirect('user_profile')
 
 # Logout the user and redirect to the login page
+
 def custom_logout(request):
     logout(request)
     messages.success(request, "You have been logged out successfully.")
@@ -314,7 +315,7 @@ def apply_gift_voucher(request):
 
 
 
-@login_required
+@login_required(login_url='/login/')
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     quantity = int(request.POST.get('quantity', 1))
@@ -346,7 +347,7 @@ def view_cart(request):
 
 
 
-@login_required
+@login_required(login_url='login')
 def update_cart_item_quantity(request, item_id):
     if request.method == 'POST':
         cart_item = get_object_or_404(CartItem, id=item_id, user=request.user)
@@ -361,7 +362,7 @@ def update_cart_item_quantity(request, item_id):
 
 
 
-@login_required
+@login_required(login_url='login')
 def remove_from_cart(request, item_id):
     cart_item = get_object_or_404(CartItem, id=item_id, user=request.user)
     cart_item.delete()

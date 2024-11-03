@@ -3,8 +3,9 @@
 {% block content %}
 <div class="container mt-5">
     <div class="row">
-        <!-- Sidebar -->
+        <!-- Sidebar with Boxed Style -->
         <div class="col-md-3">
+            <!-- Profile Picture Box -->
             <div class="card bg-light text-dark shadow-sm mb-3">
                 <div class="card-body text-center">
                     <div class="position-relative d-inline-block">
@@ -20,37 +21,50 @@
                 </div>
             </div>
 
-            <!-- Profile Options Section -->
-            <ul class="list-group mb-3">
-                <li class="list-group-item"><i class="bx bx-user"></i> <a href="javascript:void(0)" class="text-dark" onclick="showSection('viewProfile')">Personal Information</a></li>
-                <li class="list-group-item"><i class="bx bx-calendar"></i> <a href="javascript:void(0)" class="text-dark" onclick="showSection('appointments')">Appointments</a></li>
-                <li class="list-group-item"><i class="bx bx-package"></i> <a href="javascript:void(0)" class="text-dark" onclick="showSection('orders')">Orders</a></li>
-                <li class="list-group-item"><i class="bx bx-droplet"></i> <a href="javascript:void(0)" class="text-dark" onclick="showSection('donationHistory')">Donation History</a></li>
-            </ul>
+            <!-- Profile Options Section (Boxed) -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-header text-center font-weight-bold" style="background-color: #f8f9fa; font-size: 1.1rem;">
+                    Account Options
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="javascript:void(0)" class="list-group-item list-group-item-action d-flex align-items-center sidebar-item" onclick="showSection('viewProfile')">
+                        <i class="bx bx-user me-2"></i> Personal Information
+                    </a>
+                    <a href="javascript:void(0)" class="list-group-item list-group-item-action d-flex align-items-center sidebar-item" onclick="showSection('appointments')">
+                        <i class="bx bx-calendar me-2"></i> Appointments
+                    </a>
+                    <a href="javascript:void(0)" class="list-group-item list-group-item-action d-flex align-items-center sidebar-item" onclick="showSection('orders')">
+                        <i class="bx bx-package me-2"></i> Orders
+                    </a>
+                    <a href="javascript:void(0)" class="list-group-item list-group-item-action d-flex align-items-center sidebar-item" onclick="showSection('donationHistory')">
+                        <i class="bx bx-droplet me-2"></i> Donation History
+                    </a>
+                </div>
+            </div>
 
-            <!-- Legal & Support Section -->
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <i class="bx bx-file"></i>
-                    <a href="{% url 'terms_conditions' %}" class="text-dark">Terms & Conditions</a>
-                </li>
-                <li class="list-group-item">
-                    <i class="bx bx-shield"></i>
-                    <a href="{% url 'privacy_policy' %}" class="text-dark">Privacy Policy</a>
-                </li>
-                <li class="list-group-item">
-                    <i class="bx bx-refresh"></i>
-                    <a href="{% url 'refund_policy' %}" class="text-dark">Return and Refund Policy</a>
-                </li>
-                <li class="list-group-item">
-                    <i class="bx bx-help-circle"></i>
-                    <a href="{% url 'faq' %}" class="text-dark">FAQ</a>
-                </li>
-                <li class="list-group-item">
-                    <i class="bx bx-log-out"></i>
-                    <a href="{% url 'logout' %}" class="text-dark">Logout</a>
-                </li>
-            </ul>
+            <!-- Legal & Support Section (Boxed) -->
+            <div class="card shadow-sm">
+                <div class="card-header text-center font-weight-bold" style="background-color: #f8f9fa; font-size: 1.1rem;">
+                    Legal & Support
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'terms_conditions' %}" class="list-group-item list-group-item-action d-flex align-items-center sidebar-item">
+                        <i class="bx bx-file me-2"></i> Terms & Conditions
+                    </a>
+                    <a href="{% url 'privacy_policy' %}" class="list-group-item list-group-item-action d-flex align-items-center sidebar-item">
+                        <i class="bx bx-shield me-2"></i> Privacy Policy
+                    </a>
+                    <a href="{% url 'refund_policy' %}" class="list-group-item list-group-item-action d-flex align-items-center sidebar-item">
+                        <i class="bx bx-refresh me-2"></i> Return and Refund Policy
+                    </a>
+                    <a href="{% url 'faq' %}" class="list-group-item list-group-item-action d-flex align-items-center sidebar-item">
+                        <i class="bx bx-help-circle me-2"></i> FAQ
+                    </a>
+                    <a href="{% url 'logout' %}" class="list-group-item list-group-item-action d-flex align-items-center sidebar-item">
+                        <i class="bx bx-log-out me-2"></i> Logout
+                    </a>
+                </div>
+            </div>
         </div>
 
         <!-- Content Area -->
@@ -212,11 +226,36 @@
     .list-group-item {
         border: none;
     }
+    .sidebar-item {
+        padding: 10px 15px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    .sidebar-item:hover {
+        background-color: #e9f5ff;
+        color: #0056b3;
+    }
+    .sidebar-item i {
+        font-size: 1.2rem;
+        color: #4fa3db;
+    }
+    .sidebar-item:hover i {
+        color: #007bff;
+    }
+    .card-header {
+        font-weight: 600;
+        font-size: 1rem;
+        background-color: #f8f9fa;
+    }
+    .list-group-item {
+        border: none;
+        font-size: 0.95rem;
+    }
+    }
     .table th, .table td {
         vertical-align: middle;
     }
     .bg-custom-purple {
-        background-color: #6f42c1; /* Purple color */
+        background-color: #6f42c1;
         color: white !important;
     }
 </style>
