@@ -25,6 +25,7 @@ urlpatterns = [
     path('profile/', views.user_profile, name='user_profile'),  # User profile page
     path('update_profile/', views.update_profile, name='update_profile'),  # Update profile information
     path('add_donation/', views.add_donation, name='add_donation'),  # Add donation record to user's profile
+    path('delete-donation/<int:donation_id>/', views.delete_donation, name='delete_donation'), # Delete donation record from user's profile
 
     # Informational and legal pages
     path('about/', views.about, name='about'),  # About page

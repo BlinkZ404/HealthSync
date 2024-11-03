@@ -80,12 +80,14 @@ def user_profile(request):
 
     # Fetch all orders for the logged-in user
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    donations = Donation.objects.filter(user=request.user).order_by('-donation_date')
 
     # Pass user, profile, and order data to the template
     context = {
         'user': request.user,
         'profile': profile,
-        'orders': orders
+        'orders': orders,
+        'donations': donations,
     }
 
     return render(request, 'user_profile.html', context)
@@ -154,8 +156,19 @@ def add_donation(request):
 
     return redirect('user_profile')
 
-# Logout the user and redirect to the login page
+# Delete a donation entry for the authenticated user
+@login_required
+def delete_donation(request, donation_id):
+    # Get the donation object or return a 404 if it doesn't exist
+    donation = get_object_or_404(Donation, id=donation_id, user=request.user)
 
+    donation.delete()
+    messages.success(request, "Donation record deleted successfully.")
+
+    return redirect('user_profile')
+
+
+# Logout the user and redirect to the login page
 def custom_logout(request):
     logout(request)
     messages.success(request, "You have been logged out successfully.")
