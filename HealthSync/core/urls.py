@@ -57,6 +57,7 @@ urlpatterns = [
 
     # Test page for development or debugging purposes
     path('test/', views.test, name='test'),  # Test page for functionality verification
+    path('search-products/', views.search_products, name='search_products'),
 ]
 
 # Add static and media URLs in development

@@ -11,7 +11,7 @@ from .models import BloodDonor, Product, Manufacturer, CartItem, Order, OrderIte
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from decimal import Decimal
 from django.db import transaction
 
@@ -468,3 +468,19 @@ def pharmacy_registration_view(request):
         return redirect('pharmacy_registration')
 
     return render(request, 'b2b_registration.html')
+
+def search_products(request):
+    query = request.GET.get('query', '')
+    products = Product.objects.filter(name__icontains=query)[:5]  # Limit results to top 5
+
+    results = [
+        {
+            'name': product.name,
+            'sku': product.sku,
+            'price': str(product.price),
+            'image': product.image.url if product.image else '',
+        }
+        for product in products
+    ]
+
+    return JsonResponse(results, safe=False)

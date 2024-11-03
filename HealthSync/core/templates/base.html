@@ -86,6 +86,38 @@
                 opacity: 1;
             }
         }
+        /* Search Results Dropdown */
+        #searchResults {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1050;
+            background: white;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        #searchResults .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 12px; /* Increased padding for better spacing */
+            font-size: 1rem;
+            color: #333;
+            transition: background 0.2s ease-in-out; /* Smooth hover effect */
+        }
+        #searchResults .dropdown-item:hover {
+            background-color: #f0f8ff;
+        }
+        #searchResults .dropdown-item img {
+            width: 40px;
+            height: 40px;;
+            margin-right: 10px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
@@ -144,15 +176,11 @@
                     <li class="nav-item"><a class="nav-link text-white" href="{% url 'donors' %}">Blood Donation</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="{% url 'disease_prediction' %}">Disease Prediction</a></li>
                 </ul>
-                <!-- Search Bar with Icon -->
-                <form class="d-flex me-3">
-                    <div class="input-group">
-                        <input class="form-control" type="search" placeholder="Search..." aria-label="Search">
-                        <button class="btn btn-outline-secondary" style="background-color: #4fa3db; color: white;" type="submit">
-                            <i class="bx bx-search"></i>
-                        </button>
-                    </div>
-                </form>
+                <!-- Search Bar with Real-time Results -->
+                <div class="position-relative me-3" style="width: 300px;">
+                    <input class="form-control" type="search" placeholder="Search..." aria-label="Search" id="searchInput" oninput="fetchSearchResults(this.value)">
+                    <div id="searchResults"></div>
+                </div>
                 <!-- Cart Icon and Conditional Profile/Logout Links -->
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
@@ -238,6 +266,33 @@
             toast.show();
         {% endif %}
     });
+
+    function fetchSearchResults(query) {
+        const searchResults = document.getElementById('searchResults');
+        if (!query) {
+            searchResults.innerHTML = '';
+            return;
+        }
+
+        fetch(`/search-products/?query=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                searchResults.innerHTML = '';
+                if (data.length > 0) {
+                    data.forEach(product => {
+                        searchResults.innerHTML += `
+                            <a href="/medicine/${product.sku}/" class="dropdown-item">
+                                <img src="${product.image}" alt="${product.name}">
+                                <span>${product.name} - ${product.price} BDT</span>
+                            </a>
+                        `;
+                    });
+                } else {
+                    searchResults.innerHTML = '<span class="dropdown-item">No results found</span>';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
 </script>
 
 </body>
