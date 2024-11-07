@@ -5,58 +5,59 @@
     <div class="row">
         <!-- Sidebar Filter Section -->
         <div class="col-md-3">
-            <!-- Sort & Filter Card -->
             <div class="card shadow-sm mb-3" style="border-radius: 8px;">
                 <div class="card-header bg-primary text-white text-center py-2" style="border-radius: 8px 8px 0 0;">
                     <h6 class="mb-0">Sort & Filter</h6>
                 </div>
                 <div class="card-body">
-                    <!-- Gender Filter -->
-                    <div class="mb-3">
-                        <h6>Gender</h6>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="male">
-                            <label class="form-check-label" for="male">Male</label>
+                    <form method="get" action="{% url 'doctors' %}">
+                        <!-- Gender Filter -->
+                        <div class="mb-3">
+                            <h6>Gender</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" value="Male" id="male" {% if request.GET.gender == "Male" %}checked{% endif %}>
+                                <label class="form-check-label" for="male">Male</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" value="Female" id="female" {% if request.GET.gender == "Female" %}checked{% endif %}>
+                                <label class="form-check-label" for="female">Female</label>
+                            </div>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="female">
-                            <label class="form-check-label" for="female">Female</label>
+
+                        <!-- Specialities Filter -->
+                        <div class="mb-3">
+                            <h6>Specialities</h6>
+                            <select class="form-select" name="specialty">
+                                <option selected disabled>Choose Speciality</option>
+                                <option value="Cardiologist" {% if request.GET.specialty == "Cardiologist" %}selected{% endif %}>Cardiologist</option>
+                                <option value="Orthopedic" {% if request.GET.specialty == "Orthopedic" %}selected{% endif %}>Orthopedic</option>
+                                <option value="Neurologist" {% if request.GET.specialty == "Neurologist" %}selected{% endif %}>Neurologist</option>
+                                <option value="Dermatologist" {% if request.GET.specialty == "Dermatologist" %}selected{% endif %}>Dermatologist</option>
+                            </select>
                         </div>
-                    </div>
 
-                    <!-- Specialities Filter -->
-                    <div class="mb-3">
-                        <h6>Specialities</h6>
-                        <select class="form-select">
-                            <option selected disabled>Choose Speciality</option>
-                            <option>Cardiologist</option>
-                            <option>Orthopedic</option>
-                            <option>Neurologist</option>
-                            <option>Dermatologist</option>
-                        </select>
-                    </div>
+                        <!-- Division Filter -->
+                        <div class="mb-3">
+                            <h6>Division</h6>
+                            <select class="form-select" name="division">
+                                <option selected disabled>Select Division</option>
+                                <option value="Barishal" {% if request.GET.division == "Barishal" %}selected{% endif %}>Barishal</option>
+                                <option value="Chattogram" {% if request.GET.division == "Chattogram" %}selected{% endif %}>Chattogram</option>
+                                <option value="Dhaka" {% if request.GET.division == "Dhaka" %}selected{% endif %}>Dhaka</option>
+                                <option value="Khulna" {% if request.GET.division == "Khulna" %}selected{% endif %}>Khulna</option>
+                                <option value="Mymensingh" {% if request.GET.division == "Mymensingh" %}selected{% endif %}>Mymensingh</option>
+                                <option value="Rajshahi" {% if request.GET.division == "Rajshahi" %}selected{% endif %}>Rajshahi</option>
+                                <option value="Rangpur" {% if request.GET.division == "Rangpur" %}selected{% endif %}>Rangpur</option>
+                                <option value="Sylhet" {% if request.GET.division == "Sylhet" %}selected{% endif %}>Sylhet</option>
+                            </select>
+                        </div>
 
-                    <!-- Location Filter (Divisions) -->
-                    <div class="mb-3">
-                        <h6>Location</h6>
-                        <select class="form-select">
-                            <option selected disabled>Select Division</option>
-                            <option>Barishal</option>
-                            <option>Chattogram</option>
-                            <option>Dhaka</option>
-                            <option>Khulna</option>
-                            <option>Mymensingh</option>
-                            <option>Rajshahi</option>
-                            <option>Rangpur</option>
-                            <option>Sylhet</option>
-                        </select>
-                    </div>
-
-                    <!-- Availability Filter -->
-                    <div class="mb-3">
-                        <h6>Availability</h6>
-                        <input type="date" class="form-control">
-                    </div>
+                        <!-- Submit Button -->
+                         <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">Apply Filters</button>
+                            <button type="button" class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -69,7 +70,7 @@
                     <div class="card h-100 shadow-sm" style="border-radius: 8px;">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
-                                <img src="{{ doctor.photo.url }}" alt="{{ doctor.name }}" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                                <img src="{{ doctor.photo.url }}" alt="Doctor Image" class="rounded-circle me-3" style="width: 50px; height: 50px;">
                                 <h5 class="card-title mb-0">{{ doctor.name }}</h5>
                             </div>
                             <p class="text-muted mb-1">{{ doctor.specialty }}</p>
@@ -78,7 +79,7 @@
                             <p>{{ doctor.address }}</p>
                             <div class="mb-2">
                                 {% for expertise in doctor.expertise_list %}
-                                    <span class="badge bg-secondary">{{ expertise }}</span>
+                                <span class="badge bg-secondary">{{ expertise }}</span>
                                 {% endfor %}
                             </div>
                             <div class="d-flex">
@@ -93,4 +94,15 @@
         </div>
     </div>
 </div>
+<script>
+function clearFilters() {
+    // Select the form and reset its fields
+    const form = document.querySelector('form');
+    form.reset();
+
+    // Remove all query parameters by redirecting to the base URL
+    window.location.href = "{% url 'doctors' %}";
+}
+</script>
+
 {% endblock %}
