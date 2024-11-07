@@ -248,10 +248,26 @@ def test(request):
     return render(request, 'test.html')
 
 
-def doctors(request):
-    doctors = Doctor.objects.all()
+# doctors views
 
+def doctors(request):
+    # Get filter parameters from the request
+    gender = request.GET.get('gender')
+    specialty = request.GET.get('specialty')
+    division = request.GET.get('division')
+
+    # Filter queryset based on parameters
+    doctors = Doctor.objects.all()
+    if gender:
+        doctors = doctors.filter(gender=gender)
+    if specialty:
+        doctors = doctors.filter(specialty=specialty)
+    if division:
+        doctors = doctors.filter(division=division)
+
+    # Split expertise into list for displaying badges
     for doctor in doctors:
         doctor.expertise_list = doctor.expertise.split(',')
 
     return render(request, 'doctors.html', {'doctors': doctors})
+
