@@ -47,7 +47,20 @@ class BloodDonor(models.Model):
     def __str__(self):
         return f"{self.name} - {self.blood_group} ({self.mobile_number})"
 
+#doctors model
+
 class Doctor(models.Model):
+    DIVISION_CHOICES = [
+        ('Barishal', 'Barishal'),
+        ('Chattogram', 'Chattogram'),
+        ('Dhaka', 'Dhaka'),
+        ('Khulna', 'Khulna'),
+        ('Mymensingh', 'Mymensingh'),
+        ('Rajshahi', 'Rajshahi'),
+        ('Rangpur', 'Rangpur'),
+        ('Sylhet', 'Sylhet'),
+    ]
+
     name = models.CharField(max_length=100)
     specialty = models.CharField(max_length=100)
     experience = models.IntegerField(null=True)
@@ -55,6 +68,9 @@ class Doctor(models.Model):
     address = models.TextField()
     photo = models.ImageField(upload_to='doctors/', default='doctors/default.jpg')
     expertise = models.CharField(max_length=200)
+    gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')], default='Male')
+    division = models.CharField(max_length=20, choices=DIVISION_CHOICES, default='Dhaka')  # New field for division
 
     def __str__(self):
         return self.name
+
