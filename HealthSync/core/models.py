@@ -78,3 +78,36 @@ class Doctor(models.Model):
     def __str__(self):
         return self.name
 
+
+# Appointment model
+class Appointment(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='appointments',  default=1)
+    patient_name = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=15)
+    # blood_group = models.CharField(max_length=3, blank=True)
+    # disease_description = models.TextField(blank=True)
+    appointment_date = models.DateField()
+    appointment_time = models.TimeField()
+
+    # New field for tracking appointment status
+    STATUS_CHOICES = [
+        ('scheduled', 'Scheduled'),
+        ('canceled', 'Canceled'),
+        ('completed', 'Completed'),
+    ]
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='scheduled')
+
+    def __str__(self):
+        return f"  {self.patient_name} - {self.phone_number} -  {self.doctor.name} on  {self.appointment_date} at {self.appointment_time} "
+
+class AvailableDate(models.Model):
+    date = models.DateField()
+    def __str__(self):
+        return self.date.strftime("%Y-%m-%d")
+
+class AvailableTime(models.Model):
+    time = models.TimeField()
+
+    def __str__(self):
+        return self.time.strftime("%H:%M")
