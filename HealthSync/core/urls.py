@@ -43,6 +43,13 @@ urlpatterns = [
     path('blood-donors/', views.donor_view, name='donors'), # Donor list page
     path('add_donor/', views.add_donor, name='add_donor'), # Add donor info to donot list page
 
+    #appointment urls
+    path('book_appointment/<int:doctor_id>/', views.book_appointment, name='book_appointment'),
+    path('cancel_appointment/<int:appointment_id>/', views.cancel_appointment, name='cancel_appointment'),
+    path('edit_appointment/<int:appointment_id>/', views.edit_appointment, name='edit_appointment'),
+    path('get_available_slots/<int:doctor_id>/', views.get_available_slots, name='get_available_slots'),
+
+
     # Shopping and e-commerce routes
     path('cart/', views.cart, name='cart'),  # Shopping cart page
     path('checkout/', views.checkout, name='checkout'),  # Checkout page
