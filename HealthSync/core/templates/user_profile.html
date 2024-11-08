@@ -126,14 +126,67 @@
                 </div>
             </div>
 
-            <!-- Appointments Section -->
-            <div id="appointments" class="profile-section d-none">
-                <h5>Appointments</h5>
-                <div class="text-center">
-                    <img src="https://via.placeholder.com/150" alt="No Appointments Icon">
-                    <p>-- No Appointments Scheduled --</p>
+
+
+<!-- Appointments Section (Initially Hidden) -->
+<div id="appointments" class="profile-section d-none my-4">
+    <h5 class="text-center mb-4">Your Appointments</h5>
+    <div class="row justify-content-center">
+        {% for appointment in request.user.appointments.all %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-primary">Appointment with Dr. {{ appointment.doctor.name }}</h6>
+                    <hr class="mb-3">
+                    <p><strong>Patient Name:</strong> {{ appointment.patient_name }}</p>
+                    <p><strong>Contact Number:</strong> {{ appointment.phone_number }}</p>
+                    <p><strong>Appointment Date:</strong> {{ appointment.appointment_date }}</p>
+                    <p><strong>Appointment Time:</strong> {{ appointment.appointment_time }}</p>
+                    <p><strong>Status:</strong> {{ appointment.status }}</p>
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'edit_appointment' appointment.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+<a href="{% url 'cancel_appointment' appointment.id %}" class="btn btn-sm btn-outline-danger"
+   data-bs-toggle="modal"
+   data-bs-target="#cancelConfirmationModal"
+   onclick="setCancelLink({{ appointment.id }})">
+   Cancel
+</a>
+
+                    </div>
                 </div>
             </div>
+        </div>
+        {% empty %}
+        <div class="text-center mt-5">
+            <h6 class="text-muted">No Appointments Scheduled</h6>
+            <p class="text-muted">You currently have no upcoming appointments. Check back later for updates.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Cancel Confirmation Modal -->
+<div class="modal fade" id="cancelConfirmationModal" tabindex="-1" aria-labelledby="cancelConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelConfirmationModalLabel">Cancel Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to cancel this appointment?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <!-- This button will redirect to the cancel URL -->
+                <a id="confirmCancelBtn" href="#" class="btn btn-danger">Yes, Cancel Appointment</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
             <!-- Orders Section -->
             <div id="orders" class="profile-section d-none">
@@ -212,5 +265,11 @@
         const form = document.getElementById('addAddressForm');
         form.classList.toggle('d-none');
     }
+
+     function setCancelLink(appointmentId) {
+        const confirmCancelBtn = document.getElementById('confirmCancelBtn');
+        confirmCancelBtn.href = `{% url 'cancel_appointment' 0 %}`.replace(0, appointmentId);
+    }
+
 </script>
 {% endblock %}

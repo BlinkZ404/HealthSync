@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="46eeacc6-e5ed-4e40-a2c8-81c4cf04a820" name="Changes" comment="add all the appointment related urls">
-      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/doctors.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/doctors.html" afterDir="false" />
+    <list default="true" id="46eeacc6-e5ed-4e40-a2c8-81c4cf04a820" name="Changes" comment="Added New HTMl file edit_appointment to edit the appointment information">
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/templates/user_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/templates/user_profile.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +42,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "Branch-2(Doctors)",
-    "last_opened_file_path": "F:/University Essential PDF/3-2 (2024) Spring-2024/CSE - 322 Software Lab/HealthSync",
+    "last_opened_file_path": "F:/University Essential PDF/3-2 (2024) Spring-2024/CSE - 322 Software Lab/HealthSync/HealthSync/core/templates",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -104,7 +104,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1730225245596</updated>
-      <workItem from="1731068738280" duration="2786000" />
+      <workItem from="1731068738280" duration="3206000" />
     </task>
     <task id="LOCAL-00001" summary="404 Error html Added">
       <option name="closed" value="true" />
@@ -234,7 +234,23 @@
       <option name="project" value="LOCAL" />
       <updated>1731071078853</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Updated doctors html with the booking appointment form">
+      <option name="closed" value="true" />
+      <created>1731071613040</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1731071613040</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Added New HTMl file edit_appointment to edit the appointment information">
+      <option name="closed" value="true" />
+      <created>1731071771576</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1731071771576</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -257,7 +273,9 @@
     <MESSAGE value="add cancel_appointment views for cancel  book appointment info" />
     <MESSAGE value="add  available date and time views to Fetch the  available date and time" />
     <MESSAGE value="add all the appointment related urls" />
-    <option name="LAST_COMMIT_MESSAGE" value="add all the appointment related urls" />
+    <MESSAGE value="Updated doctors html with the booking appointment form" />
+    <MESSAGE value="Added New HTMl file edit_appointment to edit the appointment information" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added New HTMl file edit_appointment to edit the appointment information" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
