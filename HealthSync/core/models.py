@@ -71,6 +71,10 @@ class Doctor(models.Model):
     gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')], default='Male')
     division = models.CharField(max_length=20, choices=DIVISION_CHOICES, default='Dhaka')  # New field for division
 
+    # New fields for appointment scheduling (Sa)
+    available_dates = models.ManyToManyField('AvailableDate', blank=True)
+    available_times = models.ManyToManyField('AvailableTime', blank=True)
+
     def __str__(self):
         return self.name
 
