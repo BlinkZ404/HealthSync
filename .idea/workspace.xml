@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="46eeacc6-e5ed-4e40-a2c8-81c4cf04a820" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/HealthSync.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/HealthSync.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="46eeacc6-e5ed-4e40-a2c8-81c4cf04a820" name="Changes" comment="Add appointment model for booking appointment">
+      <change beforePath="$PROJECT_DIR$/HealthSync/core/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/HealthSync/core/admin.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +104,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1730225245596</updated>
-      <workItem from="1731068738280" duration="375000" />
+      <workItem from="1731068738280" duration="813000" />
     </task>
     <task id="LOCAL-00001" summary="404 Error html Added">
       <option name="closed" value="true" />
@@ -164,7 +162,23 @@
       <option name="project" value="LOCAL" />
       <updated>1730376883480</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Updated the Doctor Model By adding date, time">
+      <option name="closed" value="true" />
+      <created>1731069248051</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1731069248051</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Add appointment model for booking appointment">
+      <option name="closed" value="true" />
+      <created>1731069388759</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1731069388759</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -178,7 +192,9 @@
     <MESSAGE value="cart html added" />
     <MESSAGE value="checkout.html added" />
     <MESSAGE value="disease_prediction.html added" />
-    <option name="LAST_COMMIT_MESSAGE" value="disease_prediction.html added" />
+    <MESSAGE value="Updated the Doctor Model By adding date, time" />
+    <MESSAGE value="Add appointment model for booking appointment" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add appointment model for booking appointment" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
