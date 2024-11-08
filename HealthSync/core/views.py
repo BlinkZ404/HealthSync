@@ -1,4 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect , get_object_or_404
+from django.http import JsonResponse
+from datetime import datetime
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -8,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Address
 from .models import Donation
 from django.contrib.auth import logout
-from .models import BloodDonor, Doctor
+from .models import BloodDonor, Doctor , AvailableDate, AvailableTime , Appointment
 
 def home(request):
     # Render the home page
@@ -73,11 +75,13 @@ def login_view(request):
 def user_profile(request):
     # Get or create the profile associated with the user
     profile, created = Profile.objects.get_or_create(user=request.user)
+    appointments = request.user.appointments.all()
 
     # Pass user and profile data to the template
     return render(request, 'user_profile.html', {
         'user': request.user,
-        'profile': profile
+        'profile': profile ,
+        'appointments': appointments,
     })
 
 # Handle profile updates
