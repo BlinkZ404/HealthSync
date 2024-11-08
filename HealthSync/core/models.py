@@ -61,15 +61,21 @@ class Doctor(models.Model):
         ('Sylhet', 'Sylhet'),
     ]
 
+    SPECIALTY_CHOICES = [
+        ('Cardiologist', 'Cardiologist'),
+        ('Orthopedic', 'Orthopedic'),
+        ('Neurologist', 'Neurologist'),
+        ('Dermatologist', 'Dermatologist'),
+    ]
+
     name = models.CharField(max_length=100)
-    specialty = models.CharField(max_length=100)
+    specialty = models.CharField(max_length=100, choices=SPECIALTY_CHOICES)
     experience = models.IntegerField(null=True)
     hospital = models.CharField(max_length=100)
     address = models.TextField()
     photo = models.ImageField(upload_to='doctors/', default='doctors/default.jpg')
-    expertise = models.CharField(max_length=200)
     gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')], default='Male')
-    division = models.CharField(max_length=20, choices=DIVISION_CHOICES, default='Dhaka')  # New field for division
+    division = models.CharField(max_length=20, choices=DIVISION_CHOICES, default='Dhaka')
 
     # New fields for appointment scheduling (Sa)
     available_dates = models.ManyToManyField('AvailableDate', blank=True)
