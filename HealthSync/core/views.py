@@ -275,3 +275,30 @@ def doctors(request):
 
     return render(request, 'doctors.html', {'doctors': doctors})
 
+def book_appointment(request, doctor_id):
+    if request.method == "POST":
+        # Retrieve form data directly from POST request
+        doctor = get_object_or_404(Doctor, id=doctor_id)
+        patient_name = request.POST.get('patient_name')
+        phone_number = request.POST.get('phone_number')
+        # blood_group = request.POST.get('blood_group')
+        # disease_description = request.POST.get('disease_description')
+        appointment_date = request.POST.get('appointment_date')
+        appointment_time = request.POST.get('appointment_time')
+
+        # Save the appointment in the database
+        appointment = Appointment.objects.create(
+            doctor=doctor,
+            patient_name=patient_name,
+            phone_number=phone_number,
+            # blood_group=blood_group,
+            # disease_description=disease_description,
+
+            appointment_date=appointment_date,
+            appointment_time=appointment_time,
+        )
+
+        messages.success(request, "Appointment booked successfully.")
+        return redirect('user_profile')  # Redirect to user's appointments section
+
+    return redirect('doctors')
