@@ -259,6 +259,7 @@ def doctors(request):
     gender = request.GET.get('gender')
     specialty = request.GET.get('specialty')
     division = request.GET.get('division')
+    selected_date = request.GET.get('date')
 
     # Filter queryset based on parameters
     doctors = Doctor.objects.all()
@@ -269,11 +270,17 @@ def doctors(request):
     if division:
         doctors = doctors.filter(division=division)
 
-    # Split expertise into list for displaying badges
-    for doctor in doctors:
-        doctor.expertise_list = doctor.expertise.split(',')
+    if selected_date:
+        available_date = AvailableDate.objects.filter(date=selected_date).first()
+        if available_date:
+            doctors = doctors.filter(available_dates=available_date)
+        else:
+            doctors = Doctor.objects.none()
 
-    return render(request, 'doctors.html', {'doctors': doctors})
+    return render(request, 'doctors.html', {
+        'doctors': doctors,
+        'specialties': dict(Doctor.SPECIALTY_CHOICES).values(),
+    })
 
 
 # Booking Appointment
