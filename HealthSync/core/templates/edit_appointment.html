@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Edit Appointment</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="patientName" class="form-label">Patient Name</label>
+            <input type="text" class="form-control" id="patientName" name="patient_name" value="{{ appointment.patient_name }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="phoneNumber" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="phoneNumber" name="phone_number" value="{{ appointment.phone_number }}" required>
+        </div>
+
+<!--         <div class="mb-3">-->
+<!--            <label for="bloodGroup" class="form-label">Blood Group</label>-->
+<!--            <select id="bloodGroup" name="blood_group" class="form-select" required>-->
+<!--                <option value="" disabled>Select Blood Group</option>-->
+<!--                <option value="A+" {% if appointment.blood_group == "A+" %}selected{% endif %}>A+</option>-->
+<!--                <option value="A-" {% if appointment.blood_group == "A-" %}selected{% endif %}>A-</option>-->
+<!--                <option value="B+" {% if appointment.blood_group == "B+" %}selected{% endif %}>B+</option>-->
+<!--                <option value="B-" {% if appointment.blood_group == "B-" %}selected{% endif %}>B-</option>-->
+<!--                <option value="AB+" {% if appointment.blood_group == "AB+" %}selected{% endif %}>AB+</option>-->
+<!--                <option value="AB-" {% if appointment.blood_group == "AB-" %}selected{% endif %}>AB-</option>-->
+<!--                <option value="O+" {% if appointment.blood_group == "O+" %}selected{% endif %}>O+</option>-->
+<!--                <option value="O-" {% if appointment.blood_group == "O-" %}selected{% endif %}>O-</option>-->
+<!--            </select>-->
+<!--        </div>-->
+
+<!--        <div class="mb-3">-->
+<!--            <label for="diseaseDescription" class="form-label">Disease Description</label>-->
+<!--            <textarea id="diseaseDescription" name="disease_description" class="form-control">{{ appointment.disease_description }}</textarea>-->
+<!--        </div>-->
+
+
+<div class="mb-3">
+    <label for="appointmentDate" class="form-label">Appointment Date</label>
+    <select id="appointmentDate" name="appointment_date" class="form-select" required>
+        <option value="" disabled>Select Date</option>
+        {% for date in available_dates %}
+            <!-- Format the date to YYYY-MM-DD -->
+            <option value="{{ date.date|date:"Y-m-d" }}" {% if date.date == appointment.appointment_date %}selected{% endif %}>
+                {{ date.date|date:"Y-m-d" }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="mb-3">
+    <label for="appointmentTime" class="form-label">Appointment Time</label>
+    <select id="appointmentTime" name="appointment_time" class="form-select" required>
+        <option value="" disabled>Select Time</option>
+        {% for time in available_times %}
+            <option value="{{ time }}" {% if time == appointment.appointment_time|time:"H:i" %}selected{% endif %}>
+                {{ time }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
+        <button type="submit" class="btn btn-primary">Update Appointment</button>
+    </form>
+</div>
+{% endblock %}
