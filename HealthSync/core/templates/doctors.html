@@ -102,6 +102,63 @@
     </div>
 </div>
 
+<!-- Book Appointment Modal -->
+<div class="modal fade" id="bookAppointmentModal" tabindex="-1" aria-labelledby="bookAppointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bookAppointmentModalLabel">Book an Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="bookAppointmentForm" method="POST" action="">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="patientName" class="form-label">Patient Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="patientName" name="patient_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phoneNumber" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                        <input type="tel" class="form-control" id="phoneNumber" name="phone_number" required>
+                    </div>
+<!--                    <div class="mb-3">-->
+<!--                        <label for="bloodGroup" class="form-label">Blood Group</label>-->
+<!--                        <select class="form-select" id="bloodGroup" name="blood_group">-->
+<!--                            <option value="">Select Blood Group</option>-->
+<!--                            <option>A+</option>-->
+<!--                            <option>A-</option>-->
+<!--                            <option>B+</option>-->
+<!--                            <option>B-</option>-->
+<!--                            <option>AB+</option>-->
+<!--                            <option>AB-</option>-->
+<!--                            <option>O+</option>-->
+<!--                            <option>O-</option>-->
+<!--                        </select>-->
+<!--                    </div>-->
+<!--                    <div class="mb-3">-->
+<!--                        <label for="diseaseDescription" class="form-label">Disease Description</label>-->
+<!--                        <textarea class="form-control" id="diseaseDescription" name="disease_description"></textarea>-->
+<!--                    </div>-->
+<div class="mb-3">
+    <label for="appointmentDate" class="form-label">Appointment Date</label>
+    <select id="appointmentDate" name="appointment_date" class="form-select" required>
+        <option value="" disabled selected>Select Date</option>
+    </select>
+</div>
+<div class="mb-3">
+    <label for="appointmentTime" class="form-label">Appointment Time</label>
+    <select id="appointmentTime" name="appointment_time" class="form-select" required>
+        <option value="" disabled selected>Select Time</option>
+    </select>
+</div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 
 function clearFilters() {
@@ -112,4 +169,35 @@ function clearFilters() {
     // Remove all query parameters by redirecting to the base URL
     window.location.href = "{% url 'doctors' %}";
 }
+
+ document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('[data-bs-target="#bookAppointmentModal"]').forEach(button => {
+            button.addEventListener('click', function () {
+                const doctorId = this.getAttribute('data-doctor-id');
+                const form = document.getElementById('bookAppointmentForm');
+                form.action = `/book_appointment/${doctorId}/`;  // Set form action dynamically
+
+                // Fetch available dates and times for the selected doctor
+                fetch(`/get_available_slots/${doctorId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Populate the appointment date dropdown
+                        const dateSelect = document.getElementById('appointmentDate');
+                        dateSelect.innerHTML = '<option value="" disabled selected>Select Date</option>';
+                        data.available_dates.forEach(date => {
+                            dateSelect.innerHTML += `<option value="${date}">${date}</option>`;
+                        });
+
+                        // Populate the appointment time dropdown
+                        const timeSelect = document.getElementById('appointmentTime');
+                        timeSelect.innerHTML = '<option value="" disabled selected>Select Time</option>';
+                        data.available_times.forEach(time => {
+                            timeSelect.innerHTML += `<option value="${time}">${time}</option>`;
+                        });
+                    });
+            });
+        });
+    });
 </script>
+
+{% endblock %}
