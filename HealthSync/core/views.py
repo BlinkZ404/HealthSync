@@ -12,7 +12,7 @@ import json
 
 from .models import (
     Profile, Donation, BloodDonor, Product, Manufacturer,
-    CartItem, Order, OrderItem, PharmacyRegistration, OTP
+    CartItem, Order, OrderItem, PharmacyRegistration, OTP, Doctor
 )
 
 # Render the home page
@@ -479,3 +479,32 @@ def search_products(request):
     return JsonResponse(results, safe=False)
 
 
+# doctors views
+
+def doctors(request):
+    # Get filter parameters from the request
+    gender = request.GET.get('gender')
+    specialty = request.GET.get('specialty')
+    division = request.GET.get('division')
+    selected_date = request.GET.get('date')
+
+    # Filter queryset based on parameters
+    doctors = Doctor.objects.all()
+    if gender:
+        doctors = doctors.filter(gender=gender)
+    if specialty:
+        doctors = doctors.filter(specialty=specialty)
+    if division:
+        doctors = doctors.filter(division=division)
+
+    if selected_date:
+        available_date = AvailableDate.objects.filter(date=selected_date).first()
+        if available_date:
+            doctors = doctors.filter(available_dates=available_date)
+        else:
+            doctors = Doctor.objects.none()
+
+    return render(request, 'doctors.html', {
+        'doctors': doctors,
+        'specialties': dict(Doctor.SPECIALTY_CHOICES).values(),
+    })
