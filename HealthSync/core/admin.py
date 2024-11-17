@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import (
     Profile, Donation, BloodDonor, Product,
-    Manufacturer, Order, OrderItem, PharmacyRegistration
+    Manufacturer, Order, OrderItem, PharmacyRegistration ,Doctor,
+    AvailableDate, AvailableTime ,Appointment
 )
 
 # Profile Admin Configuration
@@ -90,6 +91,17 @@ class PharmacyRegistrationAdmin(admin.ModelAdmin):
     search_fields = ('full_name', 'pharmacy_name', 'mobile_number', 'license_number')
     list_filter = ('created_at',)
 
+
+# admin.site.register(Doctor)
+@admin.register(Doctor)
+class DoctorAdmin(admin.ModelAdmin):
+    list_display = ('name', 'specialty', 'hospital')
+    filter_horizontal = ('available_dates', 'available_times')
+
+
+admin.site.register(AvailableDate)
+admin.site.register(AvailableTime)
+admin.site.register(Appointment)
 admin.site.site_header = "HealthSync Admin Panel"
 admin.site.site_title = "HealthSync Admin Portal"
 admin.site.index_title = "HealthSync Admin Panel"
