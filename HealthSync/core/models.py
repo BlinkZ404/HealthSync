@@ -186,3 +186,41 @@ class PharmacyRegistration(models.Model):
 
     def __str__(self):
         return f"{self.pharmacy_name} - {self.full_name}"
+
+
+#doctors model
+
+class Doctor(models.Model):
+    DIVISION_CHOICES = [
+        ('Barishal', 'Barishal'),
+        ('Chattogram', 'Chattogram'),
+        ('Dhaka', 'Dhaka'),
+        ('Khulna', 'Khulna'),
+        ('Mymensingh', 'Mymensingh'),
+        ('Rajshahi', 'Rajshahi'),
+        ('Rangpur', 'Rangpur'),
+        ('Sylhet', 'Sylhet'),
+    ]
+
+    SPECIALTY_CHOICES = [
+        ('Cardiologist', 'Cardiologist'),
+        ('Orthopedic', 'Orthopedic'),
+        ('Neurologist', 'Neurologist'),
+        ('Dermatologist', 'Dermatologist'),
+    ]
+
+    name = models.CharField(max_length=100)
+    specialty = models.CharField(max_length=100, choices=SPECIALTY_CHOICES)
+    experience = models.IntegerField(null=True)
+    hospital = models.CharField(max_length=100)
+    address = models.TextField()
+    photo = models.ImageField(upload_to='doctors/', default='doctors/default.jpg')
+    gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')], default='Male')
+    division = models.CharField(max_length=20, choices=DIVISION_CHOICES, default='Dhaka')
+
+    # New fields for appointment scheduling (Sa)
+    available_dates = models.ManyToManyField('AvailableDate', blank=True)
+    available_times = models.ManyToManyField('AvailableTime', blank=True)
+
+    def __str__(self):
+        return self.name
