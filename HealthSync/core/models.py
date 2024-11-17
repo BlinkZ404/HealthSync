@@ -246,3 +246,16 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f"  {self.patient_name} - {self.phone_number} -  {self.doctor.name} on  {self.appointment_date} at {self.appointment_time} "
+
+
+class AvailableDate(models.Model):
+    date = models.DateField()
+    def __str__(self):
+        return self.date.strftime("%Y-%m-%d")
+
+
+class AvailableTime(models.Model):
+    time = models.TimeField()
+
+    def __str__(self):
+        return self.time.strftime("%H:%M")
