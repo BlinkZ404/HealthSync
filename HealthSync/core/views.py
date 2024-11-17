@@ -598,6 +598,7 @@ def edit_appointment(request, appointment_id):
         'available_times': available_times,
     })
 
+
 # Cancel appointment
 def cancel_appointment(request, appointment_id):
     # Retrieve the appointment and ensure it belongs to the logged-in user
@@ -609,3 +610,14 @@ def cancel_appointment(request, appointment_id):
 
     messages.success(request, "Appointment has been canceled.")
     return redirect('user_profile')
+
+
+#get the available date and time from the admin to the user
+def get_available_slots(request, doctor_id):
+    doctor = Doctor.objects.get(id=doctor_id)
+    available_dates = list(doctor.available_dates.values_list('date', flat=True))
+    available_times = list(doctor.available_times.values_list('time', flat=True))
+    return JsonResponse({
+        'available_dates': available_dates,
+        'available_times': [time.strftime('%H:%M') for time in available_times]
+    })
