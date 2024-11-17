@@ -155,7 +155,7 @@ JAZZMIN_SETTINGS = {
     "site_logo": "img/Healthsync-B.png",
     "site_logo_classes": "img-square rounded",
     "welcome_sign": "Welcome to HealthSync Admin Panel!",
-    "site_footer": "HealthSync © 2024",
+    "copyright": "HealthSync",
     "show_sidebar": True,
     "navigation_expanded": True,
     "order_with_respect_to": ["core.Profile", "core.Order", "core.OrderItem", "core.Donation", "core.Product", "core.Manufacturer","core.BloodDonor", "core.PharmacyRegistration"],

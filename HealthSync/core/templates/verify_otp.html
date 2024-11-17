@@ -21,11 +21,12 @@
             </p>
 
             <!-- OTP Verification Form -->
-            <form method="POST" action="{% url 'verify_otp' %}">
+            <form method="POST" action="{% url 'verify_otp' %}" onsubmit="return validateOTP()">
                 {% csrf_token %}
                 <div class="mb-3">
                     <label class="form-label" style="font-weight: 500; color: #c4c9d4;">OTP</label>
-                    <input type="text" name="otp" class="form-control" placeholder="Enter OTP" required style="background: #fff; color: #000; border: none; border-bottom: 2px solid #c4c9d4;">
+                    <input type="text" name="otp" class="form-control" placeholder="Enter OTP" required maxlength="6" style="background: #fff; color: #000; border: none; border-bottom: 2px solid #c4c9d4;"
+                           oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                 </div>
 
                 <!-- Submit OTP Button -->
@@ -69,5 +70,26 @@
             window.location.reload();
         });
     });
+
+    // Validate OTP length and restrict input to 6 digits
+    document.querySelector('input[name="otp"]').addEventListener('input', function (event) {
+        const inputField = event.target;
+        // Remove any non-numeric characters
+        inputField.value = inputField.value.replace(/[^0-9]/g, '');
+
+        // Limit the length to 6 characters
+        if (inputField.value.length > 6) {
+            inputField.value = inputField.value.slice(0, 6);
+        }
+    });
+    function validateOTP() {
+        const otpField = document.querySelector('input[name="otp"]');
+        if (otpField.value.length !== 6) {
+            alert("OTP must be exactly 6 digits.");
+            return false; // Prevent form submission if OTP is not exactly 6 digits
+        }
+        return true;
+    }
+
 </script>
 {% endblock %}
