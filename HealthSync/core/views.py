@@ -541,3 +541,59 @@ def book_appointment(request, doctor_id):
         return redirect('user_profile')  # Redirect to user's appointments section
 
     return redirect('doctors')
+
+
+# Edit the appointment
+def edit_appointment(request, appointment_id):
+    # Retrieve the appointment for the logged-in user by checking the patient field
+    appointment = get_object_or_404(Appointment, id=appointment_id, patient=request.user)
+
+    if request.method == 'POST':
+        # Get form data
+        appointment_date = request.POST.get('appointment_date')
+        appointment_time = request.POST.get('appointment_time')
+        patient_name = request.POST.get('patient_name')
+        phone_number = request.POST.get('phone_number')
+        # blood_group = request.POST.get('blood_group')
+        # disease_description = request.POST.get('disease_description')
+
+        # Parse the appointment date to ensure it's in the correct format
+        try:
+            # Parse and format date and time if needed
+
+            formatted_time = datetime.strptime(appointment_time, "%H:%M").time()
+            appointment_date = datetime.strptime(appointment_date, "%Y-%m-%d").date()
+        except ValueError:
+            messages.error(request, "Invalid  format. Please use valid format ")
+            return redirect('edit_appointment', appointment_id=appointment_id)
+
+        # Validate the chosen date and time
+        if (appointment_date and appointment_time) and \
+                appointment.doctor.available_dates.filter(date=appointment_date).exists() and \
+                appointment.doctor.available_times.filter(time=appointment_time).exists():
+
+            # Update appointment details
+            appointment.appointment_date = appointment_date
+            appointment.appointment_time = formatted_time
+            appointment.patient_name = patient_name
+            appointment.phone_number = phone_number
+            # appointment.blood_group = blood_group
+            # appointment.disease_description = disease_description
+            appointment.save()
+
+            messages.success(request, "Appointment updated successfully.")
+            return redirect('user_profile')
+        else:
+            messages.error(request, "Please choose a date and time from the available options.")
+
+    # Get available dates and times for the doctor's schedule
+    available_dates = appointment.doctor.available_dates.all()
+
+    # Format available times as HH:MM strings for the dropdown
+    available_times = [time.time.strftime("%H:%M") for time in appointment.doctor.available_times.all()]
+
+    return render(request, 'edit_appointment.html', {
+        'appointment': appointment,
+        'available_dates': available_dates,
+        'available_times': available_times,
+    })
