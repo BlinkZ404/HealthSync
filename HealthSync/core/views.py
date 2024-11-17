@@ -597,3 +597,15 @@ def edit_appointment(request, appointment_id):
         'available_dates': available_dates,
         'available_times': available_times,
     })
+
+# Cancel appointment
+def cancel_appointment(request, appointment_id):
+    # Retrieve the appointment and ensure it belongs to the logged-in user
+    appointment = get_object_or_404(Appointment, id=appointment_id, patient=request.user)
+
+    # Update the status to 'canceled' instead of deleting
+    appointment.status = 'canceled'
+    appointment.save()
+
+    messages.success(request, "Appointment has been canceled.")
+    return redirect('user_profile')
