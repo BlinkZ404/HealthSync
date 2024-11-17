@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from datetime import datetime
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -12,7 +13,7 @@ import json
 
 from .models import (
     Profile, Donation, BloodDonor, Product, Manufacturer,
-    CartItem, Order, OrderItem, PharmacyRegistration, OTP, Doctor
+    CartItem, Order, OrderItem, PharmacyRegistration, OTP, Doctor , AvailableDate, AvailableTime , Appointment
 )
 
 # Render the home page
@@ -113,12 +114,14 @@ def user_profile(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     donations = Donation.objects.filter(user=request.user).order_by('-donation_date')
+    appointments = request.user.appointments.all()
 
     context = {
         'user': request.user,
         'profile': profile,
         'orders': orders,
         'donations': donations,
+        'appointments': appointments,
     }
     return render(request, 'user_profile.html', context)
 
@@ -508,3 +511,33 @@ def doctors(request):
         'doctors': doctors,
         'specialties': dict(Doctor.SPECIALTY_CHOICES).values(),
     })
+
+
+# Booking Appointment
+def book_appointment(request, doctor_id):
+    if request.method == "POST":
+        # Retrieve form data directly from POST request
+        doctor = get_object_or_404(Doctor, id=doctor_id)
+        patient_name = request.POST.get('patient_name')
+        phone_number = request.POST.get('phone_number')
+        # blood_group = request.POST.get('blood_group')
+        # disease_description = request.POST.get('disease_description')
+        appointment_date = request.POST.get('appointment_date')
+        appointment_time = request.POST.get('appointment_time')
+
+        # Save the appointment in the database
+        appointment = Appointment.objects.create(
+            doctor=doctor,
+            patient_name=patient_name,
+            phone_number=phone_number,
+            # blood_group=blood_group,
+            # disease_description=disease_description,
+
+            appointment_date=appointment_date,
+            appointment_time=appointment_time,
+        )
+
+        messages.success(request, "Appointment booked successfully.")
+        return redirect('user_profile')  # Redirect to user's appointments section
+
+    return redirect('doctors')
