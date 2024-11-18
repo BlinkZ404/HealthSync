@@ -516,50 +516,37 @@ def doctors(request):
 # Booking Appointment
 def book_appointment(request, doctor_id):
     if request.method == "POST":
-        # Retrieve form data directly from POST request
         doctor = get_object_or_404(Doctor, id=doctor_id)
         patient_name = request.POST.get('patient_name')
         phone_number = request.POST.get('phone_number')
-        # blood_group = request.POST.get('blood_group')
-        # disease_description = request.POST.get('disease_description')
         appointment_date = request.POST.get('appointment_date')
         appointment_time = request.POST.get('appointment_time')
 
-        # Save the appointment in the database
         appointment = Appointment.objects.create(
             doctor=doctor,
             patient_name=patient_name,
             phone_number=phone_number,
-            # blood_group=blood_group,
-            # disease_description=disease_description,
-
             appointment_date=appointment_date,
             appointment_time=appointment_time,
         )
 
         messages.success(request, "Appointment booked successfully.")
-        return redirect('user_profile')  # Redirect to user's appointments section
+        return redirect('user_profile')
 
     return redirect('doctors')
 
 
 # Edit the appointment
 def edit_appointment(request, appointment_id):
-    # Retrieve the appointment for the logged-in user by checking the patient field
+
     appointment = get_object_or_404(Appointment, id=appointment_id, patient=request.user)
 
     if request.method == 'POST':
-        # Get form data
         appointment_date = request.POST.get('appointment_date')
         appointment_time = request.POST.get('appointment_time')
         patient_name = request.POST.get('patient_name')
         phone_number = request.POST.get('phone_number')
-        # blood_group = request.POST.get('blood_group')
-        # disease_description = request.POST.get('disease_description')
-
-        # Parse the appointment date to ensure it's in the correct format
         try:
-            # Parse and format date and time if needed
 
             formatted_time = datetime.strptime(appointment_time, "%H:%M").time()
             appointment_date = datetime.strptime(appointment_date, "%Y-%m-%d").date()
@@ -567,18 +554,14 @@ def edit_appointment(request, appointment_id):
             messages.error(request, "Invalid  format. Please use valid format ")
             return redirect('edit_appointment', appointment_id=appointment_id)
 
-        # Validate the chosen date and time
         if (appointment_date and appointment_time) and \
                 appointment.doctor.available_dates.filter(date=appointment_date).exists() and \
                 appointment.doctor.available_times.filter(time=appointment_time).exists():
 
-            # Update appointment details
             appointment.appointment_date = appointment_date
             appointment.appointment_time = formatted_time
             appointment.patient_name = patient_name
             appointment.phone_number = phone_number
-            # appointment.blood_group = blood_group
-            # appointment.disease_description = disease_description
             appointment.save()
 
             messages.success(request, "Appointment updated successfully.")
@@ -586,10 +569,8 @@ def edit_appointment(request, appointment_id):
         else:
             messages.error(request, "Please choose a date and time from the available options.")
 
-    # Get available dates and times for the doctor's schedule
     available_dates = appointment.doctor.available_dates.all()
 
-    # Format available times as HH:MM strings for the dropdown
     available_times = [time.time.strftime("%H:%M") for time in appointment.doctor.available_times.all()]
 
     return render(request, 'edit_appointment.html', {
@@ -601,10 +582,8 @@ def edit_appointment(request, appointment_id):
 
 # Cancel appointment
 def cancel_appointment(request, appointment_id):
-    # Retrieve the appointment and ensure it belongs to the logged-in user
     appointment = get_object_or_404(Appointment, id=appointment_id, patient=request.user)
 
-    # Update the status to 'canceled' instead of deleting
     appointment.status = 'canceled'
     appointment.save()
 
@@ -612,7 +591,6 @@ def cancel_appointment(request, appointment_id):
     return redirect('user_profile')
 
 
-#get the available date and time from the admin to the user
 def get_available_slots(request, doctor_id):
     doctor = Doctor.objects.get(id=doctor_id)
     available_dates = list(doctor.available_dates.values_list('date', flat=True))

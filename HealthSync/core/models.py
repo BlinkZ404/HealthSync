@@ -218,7 +218,6 @@ class Doctor(models.Model):
     gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')], default='Male')
     division = models.CharField(max_length=20, choices=DIVISION_CHOICES, default='Dhaka')
 
-    # New fields for appointment scheduling (Sa)
     available_dates = models.ManyToManyField('AvailableDate', blank=True)
     available_times = models.ManyToManyField('AvailableTime', blank=True)
 
@@ -231,12 +230,9 @@ class Appointment(models.Model):
     patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='appointments',  default=1)
     patient_name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15)
-    # blood_group = models.CharField(max_length=3, blank=True)
-    # disease_description = models.TextField(blank=True)
     appointment_date = models.DateField()
     appointment_time = models.TimeField()
 
-    # New field for tracking appointment status
     STATUS_CHOICES = [
         ('scheduled', 'Scheduled'),
         ('canceled', 'Canceled'),

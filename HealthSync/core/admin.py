@@ -91,8 +91,7 @@ class PharmacyRegistrationAdmin(admin.ModelAdmin):
     search_fields = ('full_name', 'pharmacy_name', 'mobile_number', 'license_number')
     list_filter = ('created_at',)
 
-
-# admin.site.register(Doctor)
+# Doctor Admin Configure
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):
     list_display = ('name', 'specialty', 'hospital')
@@ -102,6 +101,7 @@ class DoctorAdmin(admin.ModelAdmin):
 admin.site.register(AvailableDate)
 admin.site.register(AvailableTime)
 admin.site.register(Appointment)
+
 admin.site.site_header = "HealthSync Admin Panel"
 admin.site.site_title = "HealthSync Admin Portal"
 admin.site.index_title = "HealthSync Admin Panel"
