@@ -143,8 +143,8 @@ LOGOUT_REDIRECT_URL = 'request_otp'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Specifies SMTP as the email backend
 EMAIL_HOST = 'sandbox.smtp.mailtrap.io'  # Host for the SMTP server
 EMAIL_PORT = 2525  # Port for the SMTP server
-EMAIL_HOST_USER = '61eb56a914b7eb'  # Username for the SMTP server
-EMAIL_HOST_PASSWORD = '41d1ab55876a88'  # Password for the SMTP server
+EMAIL_HOST_USER = '80068e27c46a7e'  # Username for the SMTP server
+EMAIL_HOST_PASSWORD = '3fd0a0e3f3493a'  # Password for the SMTP server
 EMAIL_USE_TLS = True  # Enables TLS encryption for email transmission
 DEFAULT_FROM_EMAIL = 'noreply@healthsync.com'  # Default "From" email address for outgoing emails
 
@@ -172,6 +172,8 @@ JAZZMIN_SETTINGS = {
         "core.PharmacyRegistration": "fas fa-hospital-user",
         "core.Product": "fas fa-pills",
         "core.Profile": "fas fa-id-card",
+        "core.Doctor": "fas fa-user-md",
+        "core.Appointment": "fas fa-calendar-check",
 
 
     },
@@ -187,6 +189,11 @@ JAZZMIN_SETTINGS = {
         {"name": "Medicine", "url": "/medicine/", "new_window": True, "icon": "fas fa-pills"},
         {"name": "Donors", "url": "/blood-donors/", "new_window": True, "icon": "fas fa-hand-holding-medical"},
 
+    ],
+    "hide_models": [
+        "core.AvailableDate",
+        "core.AvailableTime",
+        "core.OrderItem",
     ],
 
     "changeform_format": "collapsible",

@@ -5,16 +5,16 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import JsonResponse
 from decimal import Decimal
 import random
 from django.core.mail import send_mail
 import json
-
 from .models import (
     Profile, Donation, BloodDonor, Product, Manufacturer,
-    CartItem, Order, OrderItem, PharmacyRegistration, OTP, Doctor , AvailableDate, AvailableTime , Appointment
+    CartItem, Order, OrderItem, PharmacyRegistration, OTP, Doctor, AvailableDate, AvailableTime, Appointment
 )
+
 
 # Render the home page
 def home(request):
@@ -70,7 +70,7 @@ def request_otp_view(request):
                 )
                 request.session['email'] = email
                 messages.success(request, 'Your OTP has been sent to your email.')
-                return HttpResponseRedirect('/verify-otp/')
+                return redirect('/verify-otp/')
             except Exception:
                 messages.error(request, 'Failed to send OTP. Please try again later.')
                 return render(request, 'request_otp.html')
@@ -114,7 +114,7 @@ def user_profile(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     donations = Donation.objects.filter(user=request.user).order_by('-donation_date')
-    appointments = request.user.appointments.all()
+    appointments = Appointment.objects.filter(user=request.user).order_by('-appointment_date')
 
     context = {
         'user': request.user,
@@ -197,6 +197,7 @@ def delete_donation(request, donation_id):
 
 
 # Logout the user
+@login_required
 def custom_logout(request):
     logout(request)
     messages.success(request, "You have been logged out successfully.")
@@ -238,14 +239,8 @@ def privacy_policy(request): return render(request, 'privacy.html')
 def refund_policy(request): return render(request, 'refund_policy.html')
 def terms_conditions(request): return render(request, 'terms.html')
 def b2b_registration(request): return render(request, 'b2b_registration.html')
-def medicine(request): return render(request, 'medicine.html')
-def doctors(request): return render(request, 'doctors.html')
 def disease_prediction(request): return render(request, 'disease_prediction.html')
-def appointment(request): return render(request, 'doctors.html')
-def cart(request): return render(request, 'cart.html')
-def checkout(request): return render(request, 'checkout.html')
 def error_404(request, exception): return render(request, '404.html', status=404)
-def test(request): return render(request, 'test.html')
 
 
 # View for displaying a single product's details
@@ -254,7 +249,7 @@ def medicine_page(request, sku):
     return render(request, 'medicine_page.html', {'product': product})
 
 
-# Filter and sort products
+# View product List
 def medicine(request):
     products = Product.objects.all()
     sort_order = request.GET.get('sort')
@@ -299,7 +294,7 @@ def apply_discount_code(request):
     if request.method == 'POST':
         discount_code = request.POST.get('discount_code', '')
         return redirect('view_cart')
-    return HttpResponseRedirect('/')
+    return redirect('/')
 
 
 # Apply gift voucher to cart
@@ -307,7 +302,7 @@ def apply_gift_voucher(request):
     if request.method == 'POST':
         gift_voucher = request.POST.get('gift_voucher', '')
         return redirect('view_cart')
-    return HttpResponseRedirect('/')
+    return redirect('/')
 
 
 # Add item to cart
@@ -482,16 +477,13 @@ def search_products(request):
     return JsonResponse(results, safe=False)
 
 
-# doctors views
-
+# View all doctors
 def doctors(request):
-    # Get filter parameters from the request
     gender = request.GET.get('gender')
     specialty = request.GET.get('specialty')
     division = request.GET.get('division')
     selected_date = request.GET.get('date')
 
-    # Filter queryset based on parameters
     doctors = Doctor.objects.all()
     if gender:
         doctors = doctors.filter(gender=gender)
@@ -513,7 +505,8 @@ def doctors(request):
     })
 
 
-# Booking Appointment
+# Handle booking appointment
+@login_required
 def book_appointment(request, doctor_id):
     if request.method == "POST":
         doctor = get_object_or_404(Doctor, id=doctor_id)
@@ -522,44 +515,41 @@ def book_appointment(request, doctor_id):
         appointment_date = request.POST.get('appointment_date')
         appointment_time = request.POST.get('appointment_time')
 
-        appointment = Appointment.objects.create(
-            doctor=doctor,
-            patient_name=patient_name,
-            phone_number=phone_number,
-            appointment_date=appointment_date,
-            appointment_time=appointment_time,
-        )
+        if doctor.available_dates.filter(date=appointment_date).exists() and \
+                doctor.available_times.filter(time=appointment_time).exists():
+            Appointment.objects.create(
+                user=request.user,
+                doctor=doctor,
+                patient_name=patient_name,
+                phone_number=phone_number,
+                appointment_date=appointment_date,
+                appointment_time=appointment_time,
+            )
+            messages.success(request, "Appointment booked successfully.")
+        else:
+            messages.error(request, "Selected date or time is not available. Please choose another slot.")
 
-        messages.success(request, "Appointment booked successfully.")
         return redirect('user_profile')
 
     return redirect('doctors')
 
 
-# Edit the appointment
+# edit booked appointment
+@login_required
 def edit_appointment(request, appointment_id):
-
-    appointment = get_object_or_404(Appointment, id=appointment_id, patient=request.user)
+    appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
 
     if request.method == 'POST':
         appointment_date = request.POST.get('appointment_date')
         appointment_time = request.POST.get('appointment_time')
         patient_name = request.POST.get('patient_name')
         phone_number = request.POST.get('phone_number')
-        try:
 
-            formatted_time = datetime.strptime(appointment_time, "%H:%M").time()
-            appointment_date = datetime.strptime(appointment_date, "%Y-%m-%d").date()
-        except ValueError:
-            messages.error(request, "Invalid  format. Please use valid format ")
-            return redirect('edit_appointment', appointment_id=appointment_id)
-
-        if (appointment_date and appointment_time) and \
-                appointment.doctor.available_dates.filter(date=appointment_date).exists() and \
+        # Validate the new date and time
+        if appointment.doctor.available_dates.filter(date=appointment_date).exists() and \
                 appointment.doctor.available_times.filter(time=appointment_time).exists():
-
-            appointment.appointment_date = appointment_date
-            appointment.appointment_time = formatted_time
+            appointment.appointment_date = datetime.strptime(appointment_date, "%Y-%m-%d").date()
+            appointment.appointment_time = datetime.strptime(appointment_time, "%H:%M").time()
             appointment.patient_name = patient_name
             appointment.phone_number = phone_number
             appointment.save()
@@ -567,11 +557,10 @@ def edit_appointment(request, appointment_id):
             messages.success(request, "Appointment updated successfully.")
             return redirect('user_profile')
         else:
-            messages.error(request, "Please choose a date and time from the available options.")
+            messages.error(request, "Invalid date or time. Please choose available slots.")
 
     available_dates = appointment.doctor.available_dates.all()
-
-    available_times = [time.time.strftime("%H:%M") for time in appointment.doctor.available_times.all()]
+    available_times = appointment.doctor.available_times.all()
 
     return render(request, 'edit_appointment.html', {
         'appointment': appointment,
@@ -580,22 +569,43 @@ def edit_appointment(request, appointment_id):
     })
 
 
-# Cancel appointment
+# Cancel a booked appointment
+@login_required
 def cancel_appointment(request, appointment_id):
-    appointment = get_object_or_404(Appointment, id=appointment_id, patient=request.user)
+    appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
 
     appointment.status = 'canceled'
     appointment.save()
 
-    messages.success(request, "Appointment has been canceled.")
+    messages.success(request, "Appointment canceled successfully.")
     return redirect('user_profile')
 
-
+# Show available dates for appointment
 def get_available_slots(request, doctor_id):
-    doctor = Doctor.objects.get(id=doctor_id)
-    available_dates = list(doctor.available_dates.values_list('date', flat=True))
-    available_times = list(doctor.available_times.values_list('time', flat=True))
+    doctor = get_object_or_404(Doctor, id=doctor_id)
+    now = datetime.now()
+
+    all_dates = doctor.available_dates.all()
+    available_dates = doctor.available_dates.filter(date__gte=now.date())
+
+    available_dates_list = [date.date.strftime('%Y-%m-%d') for date in available_dates]
+    unavailable_dates_list = [
+        date.date.strftime('%Y-%m-%d') for date in all_dates.difference(available_dates)
+    ]
+
+    available_times_dict = {}
+    for date_obj in available_dates:
+        date_str = date_obj.date.strftime('%Y-%m-%d')
+        if date_obj.date == now.date():
+            times = doctor.available_times.filter(time__gte=now.time())
+        else:
+            times = doctor.available_times.all()
+        available_times_dict[date_str] = sorted(set(time.time.strftime('%H:%M') for time in times))
+
+    unavailable_dates_list = sorted(set(unavailable_dates_list))
+
     return JsonResponse({
-        'available_dates': available_dates,
-        'available_times': [time.strftime('%H:%M') for time in available_times]
+        'available_dates': available_dates_list,
+        'unavailable_dates': unavailable_dates_list,
+        'available_times': available_times_dict,
     })

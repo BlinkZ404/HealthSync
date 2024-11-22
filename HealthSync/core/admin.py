@@ -98,9 +98,51 @@ class DoctorAdmin(admin.ModelAdmin):
     filter_horizontal = ('available_dates', 'available_times')
 
 
+@admin.register(Appointment)
+class AppointmentAdmin(admin.ModelAdmin):
+    # Fields to display in the admin list view
+    list_display = (
+        'id',
+        'user',
+        'doctor',
+        'patient_name',
+        'phone_number',
+        'appointment_date',
+        'appointment_time',
+        'status',
+    )
+
+    # Fields to filter by in the admin list view
+    list_filter = (
+        'status',
+        'appointment_date',
+        'doctor',
+    )
+
+    # Fields that are searchable in the admin
+    search_fields = (
+        'user__username',
+        'doctor__name',
+        'patient_name',
+        'phone_number',
+    )
+
+    # Order by default
+    ordering = ('-appointment_date', '-appointment_time')
+
+    # Set read-only fields (useful for audit purposes)
+    readonly_fields = (
+        'user',
+        'doctor',
+        'appointment_date',
+        'appointment_time',
+    )
+
+    # Add editing capabilities for certain fields
+    list_editable = ('status',)
+
 admin.site.register(AvailableDate)
 admin.site.register(AvailableTime)
-admin.site.register(Appointment)
 
 admin.site.site_header = "HealthSync Admin Panel"
 admin.site.site_title = "HealthSync Admin Portal"

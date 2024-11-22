@@ -12,7 +12,7 @@
                         <img src="{% if profile.profile_picture %}{{ profile.profile_picture.url }}{% else %}https://via.placeholder.com/100{% endif %}"
                              alt="Profile Picture" id="previewImage" class="rounded-circle mb-3"
                              style="width: 120px; height: 120px; border: 3px solid #4fa3db;">
-                        <label for="profilePicture" class="position-absolute bottom-0 start-50 translate-middle-x bg-primary rounded-circle p-2" style="cursor: pointer;">
+                        <label for="profilePictureInput" class="position-absolute bottom-0 start-50 translate-middle-x bg-primary rounded-circle p-2" style="cursor: pointer;">
                             <i class="bx bx-camera text-white"></i>
                         </label>
                     </div>
@@ -158,62 +158,82 @@
                 {% endif %}
             </div>
 
-<!-- Appointments Section  -->
-<div id="appointments" class="profile-section d-none my-4">
-    <h5 class="text-center mb-4">Your Appointments</h5>
-    <div class="row justify-content-center">
-        {% for appointment in request.user.appointments.all %}
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h6 class="card-title text-primary">Appointment with Dr. {{ appointment.doctor.name }}</h6>
-                    <hr class="mb-3">
-                    <p><strong>Patient Name:</strong> {{ appointment.patient_name }}</p>
-                    <p><strong>Contact Number:</strong> {{ appointment.phone_number }}</p>
-                    <p><strong>Appointment Date:</strong> {{ appointment.appointment_date }}</p>
-                    <p><strong>Appointment Time:</strong> {{ appointment.appointment_time }}</p>
-                    <p><strong>Status:</strong> {{ appointment.status }}</p>
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{% url 'edit_appointment' appointment.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
-<a href="{% url 'cancel_appointment' appointment.id %}" class="btn btn-sm btn-outline-danger"
-   data-bs-toggle="modal"
-   data-bs-target="#cancelConfirmationModal"
-   onclick="setCancelLink({{ appointment.id }})">
-   Cancel
-</a>
-
+            <!-- Appointments Section -->
+            <div id="appointments" class="profile-section d-none">
+                <h4 class="mb-4">My Appointments</h4>
+                {% if appointments %}
+                    <table class="table table-striped table-hover shadow-sm rounded">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th>Date</th>
+                                <th>Doctor</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in appointments %}
+                            <tr class="text-center">
+                                <td>{{ appointment.appointment_date|date:"j F, Y" }}</td>
+                                <td>{{ appointment.doctor.name }}</td>
+                                <td>{{ appointment.appointment_time|time:"g:i A" }}</td>
+                                <td>
+                                    <span class="badge
+                                        {% if appointment.status == 'completed' %} bg-success
+                                        {% elif appointment.status == 'canceled' %} bg-danger
+                                        {% else %} bg-warning text-dark
+                                        {% endif %}">
+                                        {{ appointment.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if appointment.status != 'canceled' and appointment.status != 'completed' %}
+                                        <a href="{% url 'edit_appointment' appointment.id %}" class="btn btn-sm btn-outline-primary me-2">
+                                            Edit
+                                        </a>
+                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelConfirmationModal" data-appointment-id="{{ appointment.id }}">
+                                            Cancel
+                                        </button>
+                                    {% else %}
+                                        <span class="text-muted">No Actions Available</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="text-center d-flex justify-content-center align-items-center" style="height: 200px;">
+                        <div class="card shadow-sm text-center p-4" style="border: none; max-width: 400px;">
+                            <div class="mb-3">
+                                <i class="bx bx-calendar-x" style="font-size: 3rem; color: #6c757d;"></i>
+                            </div>
+                            <h6 class="text-muted">No Appointments Scheduled</h6>
+                            <p class="text-muted">You currently have no upcoming appointments. Check back later for updates.</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Cancel Confirmation Modal -->
+            <div class="modal fade" id="cancelConfirmationModal" tabindex="-1" aria-labelledby="cancelConfirmationModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title" id="cancelConfirmationModalLabel">Cancel Appointment</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to cancel this appointment?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <!-- Dynamic cancel link -->
+                            <a id="confirmCancelBtn" href="#" class="btn btn-danger">Yes, Cancel Appointment</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        {% empty %}
-        <div class="text-center mt-5">
-            <h6 class="text-muted">No Appointments Scheduled</h6>
-            <p class="text-muted">You currently have no upcoming appointments. Check back later for updates.</p>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-
-<!-- Cancel Confirmation Modal -->
-<div class="modal fade" id="cancelConfirmationModal" tabindex="-1" aria-labelledby="cancelConfirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cancelConfirmationModalLabel">Cancel Appointment</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to cancel this appointment?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <!-- This button will redirect to the cancel URL -->
-                <a id="confirmCancelBtn" href="#" class="btn btn-danger">Yes, Cancel Appointment</a>
-            </div>
-        </div>
-    </div>
-</div>
 
             <!-- Donation History Section -->
             <div id="donationHistory" class="profile-section d-none">
@@ -351,10 +371,16 @@
         document.getElementById(sectionId).classList.remove('d-none');
     }
 
-         function setCancelLink(appointmentId) {
-        const confirmCancelBtn = document.getElementById('confirmCancelBtn');
-        confirmCancelBtn.href = `{% url 'cancel_appointment' 0 %}`.replace(0, appointmentId);
-    }
+    // Dynamically updates the cancel appointment link in the modal based on the selected appointment
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('[data-bs-target="#cancelConfirmationModal"]').forEach(button => {
+            button.addEventListener('click', function () {
+                const appointmentId = this.getAttribute('data-appointment-id');
+                const cancelBtn = document.getElementById('confirmCancelBtn');
+                cancelBtn.href = `{% url 'cancel_appointment' 0 %}`.replace(0, appointmentId);
+            });
+        });
+    });
 
 </script>
 
@@ -414,6 +440,7 @@
     .table thead th {
         font-weight: 600;
         color: #4fa3db;
+        text-align: center;
     }
     .btn-primary {
         transition: all 0.3s ease;
@@ -421,6 +448,25 @@
     .btn-primary:hover {
         background-color: #0056b3;
         box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+    }
+    .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+    .btn-outline-primary, .btn-outline-danger {
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #0056b3;
+        color: white;
+        box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: white;
+        box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
     }
 
 </style>

@@ -52,14 +52,14 @@
                             </select>
                         </div>
 
-                         <!-- Date Filter -->
+                        <!-- Date Filter -->
                         <div class="mb-3">
                             <h6>Date</h6>
-                            <input type="date" name="date" class="form-control">
+                            <input type="date" name="date" class="form-control" value="{{ request.GET.date }}">
                         </div>
 
-                        <!-- Submit Button -->
-                         <div class="d-flex justify-content-between">
+                        <!-- Submit and Clear Buttons -->
+                        <div class="d-flex justify-content-between">
                             <button type="submit" class="btn btn-primary">Apply Filters</button>
                             <button type="button" class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
                         </div>
@@ -89,9 +89,7 @@
                                 {% endfor %}
                             </div>
                             <div class="d-flex">
-
-                                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bookAppointmentModal" data-doctor-id="{{ doctor.id }}">Book Appointment</button>
-
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bookAppointmentModal" data-doctor-id="{{ doctor.id }}">Book Appointment</button>
                             </div>
                         </div>
                     </div>
@@ -99,87 +97,96 @@
                 {% endfor %}
             </div>
         </div>
-    </div>
-</div>
 
-<!-- Book Appointment Modal -->
-<div class="modal fade" id="bookAppointmentModal" tabindex="-1" aria-labelledby="bookAppointmentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="bookAppointmentModalLabel">Book an Appointment</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="bookAppointmentForm" method="POST" action="">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="patientName" class="form-label">Patient Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="patientName" name="patient_name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="phoneNumber" class="form-label">Phone Number <span class="text-danger">*</span></label>
-                        <input type="tel" class="form-control" id="phoneNumber" name="phone_number" required>
-                    </div>
-<div class="mb-3">
-    <label for="appointmentDate" class="form-label">Appointment Date</label>
-    <select id="appointmentDate" name="appointment_date" class="form-select" required>
-        <option value="" disabled selected>Select Date</option>
-    </select>
-</div>
-<div class="mb-3">
-    <label for="appointmentTime" class="form-label">Appointment Time</label>
-    <select id="appointmentTime" name="appointment_time" class="form-select" required>
-        <option value="" disabled selected>Select Time</option>
-    </select>
-</div>
 
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+        <!-- Book Appointment Modal -->
+        <div class="modal fade" id="bookAppointmentModal" tabindex="-1" aria-labelledby="bookAppointmentModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bookAppointmentModalLabel">Book an Appointment</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="bookAppointmentForm" method="POST" action="">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="patientName" class="form-label">Patient Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="patientName" name="patient_name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phoneNumber" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control" id="phoneNumber" name="phone_number" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="appointmentDate" class="form-label">Appointment Date</label>
+                                <input type="text" id="appointmentDate" name="appointment_date" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="appointmentTime" class="form-label">Appointment Time</label>
+                                <select id="appointmentTime" name="appointment_time" class="form-select" required>
+                                    <option value="" disabled selected>Select Time</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<style>
+    .flatpickr-day.flatpickr-disabled {
+    color: #dc3545 !important;
+    text-decoration: line-through;
+    cursor: not-allowed;
+    background-color: #f8d7da !important;
+}
+</style>
 
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-
 function clearFilters() {
-    // Select the form and reset its fields
-    const form = document.querySelector('form');
-    form.reset();
-
-    // Remove all query parameters by redirecting to the base URL
     window.location.href = "{% url 'doctors' %}";
 }
 
- document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll('[data-bs-target="#bookAppointmentModal"]').forEach(button => {
-            button.addEventListener('click', function () {
-                const doctorId = this.getAttribute('data-doctor-id');
-                const form = document.getElementById('bookAppointmentForm');
-                form.action = `/book_appointment/${doctorId}/`;  // Set form action dynamically
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('[data-bs-target="#bookAppointmentModal"]').forEach(button => {
+        button.addEventListener('click', function () {
+            const doctorId = this.getAttribute('data-doctor-id');
+            const form = document.getElementById('bookAppointmentForm');
+            form.action = `/book_appointment/${doctorId}/`;
 
-                // Fetch available dates and times for the selected doctor
-                fetch(`/get_available_slots/${doctorId}/`)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Populate the appointment date dropdown
-                        const dateSelect = document.getElementById('appointmentDate');
-                        dateSelect.innerHTML = '<option value="" disabled selected>Select Date</option>';
-                        data.available_dates.forEach(date => {
-                            dateSelect.innerHTML += `<option value="${date}">${date}</option>`;
-                        });
+            // Fetch available and unavailable dates and times
+            fetch(`/get_available_slots/${doctorId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    const dateInput = document.getElementById('appointmentDate');
+                    const timeSelect = document.getElementById('appointmentTime');
 
-                        // Populate the appointment time dropdown
-                        const timeSelect = document.getElementById('appointmentTime');
-                        timeSelect.innerHTML = '<option value="" disabled selected>Select Time</option>';
-                        data.available_times.forEach(time => {
-                            timeSelect.innerHTML += `<option value="${time}">${time}</option>`;
-                        });
+                    // Clear and initialize date/time
+                    timeSelect.innerHTML = '<option value="" disabled selected>Select Time</option>';
+
+                    // Configure Flatpickr
+                    flatpickr(dateInput, {
+                        dateFormat: "Y-m-d",
+                        minDate: "today",
+                        enable: data.available_dates, // Enable only available dates
+                        disable: data.unavailable_dates, // Disable unavailable dates
+                        onChange: function (selectedDates, dateStr, instance) {
+                            // Update available times based on selected date
+                            const availableTimes = data.available_times[dateStr] || [];
+                            timeSelect.innerHTML = '<option value="" disabled selected>Select Time</option>';
+                            availableTimes.forEach(time => {
+                                timeSelect.innerHTML += `<option value="${time}">${time}</option>`;
+                            });
+                        }
                     });
-            });
+                });
         });
     });
+});
 </script>
-
 {% endblock %}

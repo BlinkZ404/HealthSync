@@ -1,43 +1,110 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div class="container mt-5">
+<div class="container py-5">
     <h2 class="text-center mb-4">Edit Appointment</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="patientName" class="form-label">Patient Name</label>
-            <input type="text" class="form-control" id="patientName" name="patient_name" value="{{ appointment.patient_name }}" required>
+
+    <div class="row">
+        <!-- Appointment Details Section -->
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-user-edit"></i> Appointment Details</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="patientName" class="form-label"><i class="fas fa-user"></i> Patient Name</label>
+                            <input type="text" class="form-control" id="patientName" name="patient_name" value="{{ appointment.patient_name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phoneNumber" class="form-label"><i class="fas fa-phone-alt"></i> Phone Number</label>
+                            <input type="tel" class="form-control" id="phoneNumber" name="phone_number" value="{{ appointment.phone_number }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="appointmentDate" class="form-label"><i class="fas fa-calendar-alt"></i> Appointment Date</label>
+                            <select id="appointmentDate" name="appointment_date" class="form-select" required>
+                                <option value="" disabled>Select Date</option>
+                                {% for date in available_dates %}
+                                    <option value="{{ date.date|date:"Y-m-d" }}" {% if date.date == appointment.appointment_date %}selected{% endif %}>
+                                        {{ date.date|date:"Y-m-d" }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="appointmentTime" class="form-label"><i class="fas fa-clock"></i> Appointment Time</label>
+                            <select id="appointmentTime" name="appointment_time" class="form-select" required>
+                                <option value="" disabled>Select Time</option>
+                                {% for time in available_times %}
+                                    <option value="{{ time }}" {% if time == appointment.appointment_time|time:"H:i" %}selected{% endif %}>
+                                        {{ time }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-save"></i> Update Appointment</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="phoneNumber" class="form-label">Phone Number</label>
-            <input type="tel" class="form-control" id="phoneNumber" name="phone_number" value="{{ appointment.phone_number }}" required>
+
+        <!-- Appointment Summary Section -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Summary</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="fw-bold text-secondary"><i class="fas fa-user-md"></i> Doctor</h6>
+                    <p>{{ appointment.doctor.name }}</p>
+                    <hr>
+                    <h6 class="fw-bold text-secondary"><i class="fas fa-hospital"></i> Hospital</h6>
+                    <p>{{ appointment.doctor.hospital }}</p>
+                    <hr>
+                    <h6 class="fw-bold text-secondary"><i class="fas fa-map-marker-alt"></i> Location</h6>
+                    <p>{{ appointment.doctor.address }}</p>
+                </div>
+            </div>
         </div>
-<div class="mb-3">
-    <label for="appointmentDate" class="form-label">Appointment Date</label>
-    <select id="appointmentDate" name="appointment_date" class="form-select" required>
-        <option value="" disabled>Select Date</option>
-        {% for date in available_dates %}
-            <option value="{{ date.date|date:"Y-m-d" }}" {% if date.date == appointment.appointment_date %}selected{% endif %}>
-                {{ date.date|date:"Y-m-d" }}
-            </option>
-        {% endfor %}
-    </select>
+    </div>
+
+    <!-- Back to Appointments Button -->
+    <div class="d-flex justify-content-center mt-4">
+        <a href="{% url 'user_profile' %}" class="btn btn-primary btn-lg px-5 py-2"><i class="fas fa-arrow-left"></i> Back to Profile</a>
+    </div>
 </div>
 
-<div class="mb-3">
-    <label for="appointmentTime" class="form-label">Appointment Time</label>
-    <select id="appointmentTime" name="appointment_time" class="form-select" required>
-        <option value="" disabled>Select Time</option>
-        {% for time in available_times %}
-            <option value="{{ time }}" {% if time == appointment.appointment_time|time:"H:i" %}selected{% endif %}>
-                {{ time }}
-            </option>
-        {% endfor %}
-    </select>
-</div>
+<!-- Font Awesome for Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-        <button type="submit" class="btn btn-primary">Update Appointment</button>
-    </form>
-</div>
+<style>
+    .card-header {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+    }
+    .text-muted {
+        font-size: 0.9rem;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        font-size: 1.1rem;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    .text-primary {
+        color: #007bff;
+        font-weight: bold;
+    }
+    .text-secondary {
+        color: #6c757d;
+    }
+    .fw-bold {
+        font-weight: 600;
+    }
+</style>
 {% endblock %}

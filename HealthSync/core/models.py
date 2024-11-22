@@ -226,8 +226,8 @@ class Doctor(models.Model):
 
 # Appointment model
 class Appointment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='appointments')  #
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-    patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='appointments',  default=1)
     patient_name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15)
     appointment_date = models.DateField()
@@ -241,17 +241,18 @@ class Appointment(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='scheduled')
 
     def __str__(self):
-        return f"  {self.patient_name} - {self.phone_number} -  {self.doctor.name} on  {self.appointment_date} at {self.appointment_time} "
+        return f"{self.patient_name} with {self.doctor.name} on {self.appointment_date} at {self.appointment_time}"
 
 
+# Available Date Model
 class AvailableDate(models.Model):
     date = models.DateField()
     def __str__(self):
         return self.date.strftime("%Y-%m-%d")
 
 
+# Available Time Model
 class AvailableTime(models.Model):
     time = models.TimeField()
-
     def __str__(self):
         return self.time.strftime("%H:%M")
