@@ -506,7 +506,7 @@ def doctors(request):
 
 
 # Handle booking appointment
-@login_required
+@login_required(login_url='request_otp')
 def book_appointment(request, doctor_id):
     if request.method == "POST":
         doctor = get_object_or_404(Doctor, id=doctor_id)
